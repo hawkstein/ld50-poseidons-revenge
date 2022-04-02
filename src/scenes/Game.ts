@@ -11,7 +11,6 @@ import selectFloodTarget, {
   selectNearbyTileToFlood,
 } from "game-objects/selectFloodTarget";
 export default class Game extends Phaser.Scene {
-  private warrior!: Warrior;
   private warriors: Warrior[] = [];
   private invaders: Invader[] = [];
   private layer!: Phaser.Tilemaps.TilemapLayer;
