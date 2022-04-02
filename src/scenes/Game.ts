@@ -110,6 +110,11 @@ export default class Game extends Phaser.Scene {
     //console.log(`Invader spawning at ${tileX} ${tileY}`);
     const invader = new Invader(this, x, y);
     this.invaders.push(invader);
+    invader.on(Phaser.GameObjects.Events.DESTROY, () => {
+      this.invaders = this.invaders.filter(
+        (otherInvader) => otherInvader !== invader
+      );
+    });
     this.add.existing(invader);
     const { targetX, targetY } = selectFloodTarget(
       { x: tileX, y: tileY },
@@ -156,8 +161,8 @@ export default class Game extends Phaser.Scene {
     });
   }
 
-  update() {
-    this.warrior.update();
+  update(time: number) {
+    this.warrior.update(time, this.invaders);
     this.invaders.forEach((invader) => invader.update());
   }
 }

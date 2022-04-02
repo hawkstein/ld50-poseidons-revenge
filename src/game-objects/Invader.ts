@@ -8,6 +8,8 @@ export class Invader extends Phaser.GameObjects.Sprite {
   private service: any;
   private moveToTarget?: Phaser.Math.Vector2;
 
+  public health: number = 3;
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "invader");
     const invaderMachine = createMachine(buildConfig(2000));
@@ -24,6 +26,15 @@ export class Invader extends Phaser.GameObjects.Sprite {
 
   moveTo(target: Phaser.Math.Vector2) {
     this.moveToTarget = target;
+  }
+
+  damage(amount: number = 1): boolean {
+    this.health -= amount;
+    if (this.health <= 0) {
+      this.destroy();
+      return true;
+    }
+    return false;
   }
 
   destroy(fromScene?: boolean): void {

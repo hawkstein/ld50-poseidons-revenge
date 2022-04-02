@@ -19,7 +19,7 @@ const selectFloodTarget = (
     default:
       throw new Error("No initialSwimDirection supplied");
   }
-  let targetFound;
+  let targetFound = false;
   let tileX = start.x;
   let tileY = start.y;
   while (

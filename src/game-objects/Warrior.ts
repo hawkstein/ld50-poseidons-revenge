@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
+import { Invader } from "./Invader";
 
 const warriorMachine = createMachine({
   id: "warrior",
@@ -35,12 +36,6 @@ const warriorMachine = createMachine({
           on: {
             MOVE: "moving",
             FINISHED_ATTACKING: "idle",
-          },
-          states: {
-            attackingUp: {},
-            attackingDown: {},
-            attackingLeft: {},
-            attackingRight: {},
           },
         },
         moving: {
@@ -86,11 +81,13 @@ export class Warrior extends Phaser.GameObjects.Sprite {
   private service: any;
   private movePath: Phaser.Math.Vector2[] = [];
   private moveToTarget?: Phaser.Math.Vector2;
+  private nextEnemyScan: number = 0;
+  private currentEnemy: Invader | null = null;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "warrior");
     this.service = interpret(warriorMachine).onTransition((state) => {
-      // console.log(state.value);
+      console.log(state.value);
     });
     this.setInteractive();
     this.service.start();
@@ -121,7 +118,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     this.service.send({ type: "SELECT" });
   }
 
-  update() {
+  update(time: number, enemies: Invader[]) {
     let dx = 0;
     let dy = 0;
 
@@ -173,18 +170,47 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     //   this.anims.play(parts.join("-"));
     //   //this.setVelocity(0, 0)
     // }
-    // if (this.service.state.value.activity === "idle") {
-    //   console.log(
-    //     `Distance to target: ${Phaser.Math.Distance.Between(
-    //       this.x,
-    //       this.y,
-    //       200,
-    //       270
-    //     )}`
-    //   );
-    //   if (Phaser.Math.Distance.Between(this.x, this.y, 200, 270) < 100) {
-    //     this.service.send({ type: "ATTACK" });
-    //   }
-    // }
+    // console.log(time);
+    if (
+      this.service.state.value.activity === "idle" &&
+      time > this.nextEnemyScan
+    ) {
+      this.nextEnemyScan = time += 500;
+      console.log("SCANNING FOR ENEMIES...");
+      let enemyFound = false;
+      enemies.forEach((enemy) => {
+        if (
+          !enemyFound &&
+          Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y) < 200
+        ) {
+          this.service.send({ type: "ATTACK" });
+          enemyFound = true;
+          this.currentEnemy = enemy;
+        }
+      });
+      // console.log(
+      //   `Distance to target: ${Phaser.Math.Distance.Between(
+      //     this.x,
+      //     this.y,
+      //     200,
+      //     270
+      //   )}`
+      // );
+      // if (Phaser.Math.Distance.Between(this.x, this.y, 200, 270) < 100) {
+      //   this.service.send({ type: "ATTACK" });
+      // }
+    }
+
+    if (
+      this.service.state.value.activity === "attacking" &&
+      time > this.nextEnemyScan
+    ) {
+      this.nextEnemyScan = time += 800;
+      console.log("Attacking!");
+      const killed = this.currentEnemy?.damage(1);
+      if (killed) {
+        this.service.send({ type: "FINISHED_ATTACKING" });
+      }
+    }
   }
 }
