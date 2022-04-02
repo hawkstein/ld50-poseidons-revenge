@@ -25,6 +25,16 @@
         "type": "image",
         "key": "poseidon",
         "url": "assets/Poseidon.png"
+      },
+      {
+        "type": "image",
+        "key": "spring",
+        "url": "assets/Spring.png"
+      },
+      {
+        "type": "image",
+        "key": "water",
+        "url": "assets/WaterParticle.png"
       }
     ]
   }

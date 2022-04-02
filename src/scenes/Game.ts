@@ -6,6 +6,7 @@ import findPath from "game-objects/findPath";
 import { Invader, INVADER_FLOOD } from "game-objects/Invader";
 import { Temple } from "game-objects/Temple";
 import { Poseidon } from "game-objects/Poseidon";
+import { Spring } from "game-objects/Spring";
 export default class Game extends Phaser.Scene {
   private warrior!: Warrior;
   private invaders: Invader[] = [];
@@ -67,6 +68,7 @@ export default class Game extends Phaser.Scene {
 
     const poseidon = new Poseidon(this, 480, 100);
     this.add.existing(poseidon);
+    this.spawnSpring(14, 16);
   }
 
   spawnInvader() {
@@ -86,6 +88,21 @@ export default class Game extends Phaser.Scene {
       // TODO: warriors should check if they are sunk
       // TODO: tell invader it has successfully flooded
     });
+  }
+
+  spawnSpring(xTile: number, yTile: number) {
+    const { x, y } = this.layer.tileToWorldXY(xTile, yTile);
+    const spring = new Spring(this, x, y - 12);
+    this.add.existing(spring);
+    const tintTile = (xAt: number, yAt: number) => {
+      const tile = this.layer.getTileAt(xAt, yAt);
+      tile.tint = 0x00aaff;
+    };
+
+    tintTile(xTile, yTile);
+    tintTile(xTile - 1, yTile);
+    tintTile(xTile - 1, yTile - 1);
+    tintTile(xTile, yTile - 1);
   }
 
   update() {
