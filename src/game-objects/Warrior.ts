@@ -81,7 +81,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "warrior");
     this.service = interpret(warriorMachine).onTransition((state) => {
-      console.log(state.value);
+      // console.log(state.value);
     });
     this.setInteractive();
     this.service.start();
@@ -98,7 +98,6 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     //     y: Math.abs(vector.y / 32),
     //   }))
     // );
-    console.log([...path]);
     if (!path || path.length <= 0) {
       return;
     }

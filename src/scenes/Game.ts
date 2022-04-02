@@ -7,7 +7,9 @@ import { Invader, INVADER_FLOOD } from "game-objects/Invader";
 import { Temple } from "game-objects/Temple";
 import { Poseidon } from "game-objects/Poseidon";
 import { Spring } from "game-objects/Spring";
-import selectFloodTarget from "game-objects/selectFloodTarget";
+import selectFloodTarget, {
+  selectNearbyTileToFlood,
+} from "game-objects/selectFloodTarget";
 export default class Game extends Phaser.Scene {
   private warrior!: Warrior;
   private invaders: Invader[] = [];
@@ -122,23 +124,17 @@ export default class Game extends Phaser.Scene {
       zone.initialSwimDirection,
       this.layer
     );
-    // console.log(
-    //   `Invader targeting: ${this.layer.worldToTileX(
-    //     targetX
-    //   )} ${this.layer.worldToTileY(targetY)}`
-    // );
     invader.moveTo(new Phaser.Math.Vector2(targetX, targetY));
     invader.on(INVADER_FLOOD, () => {
       const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
-      // console.log(
-      //   "The invader is flooding at: ",
-      //   this.layer.worldToTileX(invader.x),
-      //   " ",
-      //   this.layer.worldToTileY(invader.y)
-      // );
       this.layer.putTileAt(0, invaderPos.x, invaderPos.y);
       // TODO: warriors should check if they are sunk
-      // TODO: tell invader it has successfully flooded
+      // Select target from nearby tiles
+      const newTile = selectNearbyTileToFlood(
+        { x: invaderPos.x, y: invaderPos.y },
+        this.layer
+      );
+      invader.moveTo(this.layer.tileToWorldXY(newTile.x, newTile.y));
     });
   }
 

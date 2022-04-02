@@ -33,12 +33,23 @@ export default function buildConfig(spawnTime: number) {
       flooding: {
         on: {
           KILLED: "dying",
+        },
+        after: {
+          500: "finished_flooding",
+        },
+      },
+      finished_flooding: {
+        on: {
           SWIM_TO_LAND: "swimming",
+          KILLED: "dying",
         },
       },
       dying: {
         on: {
           FINISHED_DYING: "dead",
+        },
+        after: {
+          500: "dead",
         },
       },
       dead: {

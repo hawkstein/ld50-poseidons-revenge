@@ -46,4 +46,35 @@ const selectFloodTarget = (
   return { targetX: 0, targetY: 0 };
 };
 
+const selectNearbyTileToFlood = (
+  start: { x: number; y: number },
+  tileMapLayer: Phaser.Tilemaps.TilemapLayer
+) => {
+  const { x, y } = start;
+  const neighbors = Phaser.Utils.Array.Shuffle([
+    { x, y: y - 1 }, // top
+    { x: x + 1, y }, // right
+    { x, y: y + 1 }, // bottom
+    { x: x - 1, y }, // left
+  ]);
+
+  for (let i = 0; i < neighbors.length; ++i) {
+    const neighbor = neighbors[i];
+    const tile = tileMapLayer.getTileAt(neighbor.x, neighbor.y);
+
+    if (!tile) {
+      continue;
+    }
+
+    if (tile.index <= 0) {
+      continue;
+    }
+
+    return { x: tile.x, y: tile.y };
+  }
+  return start;
+};
+
+export { selectNearbyTileToFlood };
+
 export default selectFloodTarget;

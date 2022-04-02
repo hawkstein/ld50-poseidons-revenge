@@ -14,9 +14,11 @@ export class Invader extends Phaser.GameObjects.Sprite {
     super(scene, x, y, "invader");
     const invaderMachine = createMachine(buildConfig(2000));
     this.service = interpret(invaderMachine).onTransition((state) => {
-      // console.log(state.value);
-      if (state.value === "flooding") {
+      console.log(`Invader: ${state.value}`);
+      if (state.value === "finished_flooding") {
         this.emit(INVADER_FLOOD);
+      } else if (state.value === "dead") {
+        this.destroy();
       }
     });
     this.service.start();
@@ -25,13 +27,19 @@ export class Invader extends Phaser.GameObjects.Sprite {
   }
 
   moveTo(target: Phaser.Math.Vector2) {
-    this.moveToTarget = target;
+    if (target.x === this.x && target.y === this.y) {
+      this.service.send({ type: "KILLED" });
+      // TODO: Something else should happen here, idle?
+    } else {
+      this.moveToTarget = target;
+      this.service.send({ type: "SWIM_TO_LAND" });
+    }
   }
 
   damage(amount: number = 1): boolean {
     this.health -= amount;
     if (this.health <= 0) {
-      this.destroy();
+      this.service.send("KILLED");
       return true;
     }
     return false;
