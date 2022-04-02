@@ -7,6 +7,7 @@ import { Invader, INVADER_FLOOD } from "game-objects/Invader";
 import { Temple } from "game-objects/Temple";
 import { Poseidon } from "game-objects/Poseidon";
 import { Spring } from "game-objects/Spring";
+import selectFloodTarget from "game-objects/selectFloodTarget";
 export default class Game extends Phaser.Scene {
   private warrior!: Warrior;
   private invaders: Invader[] = [];
@@ -17,7 +18,7 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    // Create level data from JSON
+    // Create level data from JSON / image
     // Create TileMap from level data
     const TILE_SIDE = 32;
     const map = this.make.tilemap({
@@ -45,7 +46,7 @@ export default class Game extends Phaser.Scene {
         //const startVec = layer.worldToTileXY(this.faune.x, this.faune.y)
         const targetVec = this.layer.worldToTileXY(worldX, worldY);
 
-        //console.log(targetVec);
+        console.log(targetVec);
 
         const warriorPos = this.layer.worldToTileXY(
           this.warrior.x,
@@ -60,7 +61,14 @@ export default class Game extends Phaser.Scene {
       this.warrior.select();
     });
     this.add.existing(this.warrior);
-    this.spawnInvader();
+
+    this.time.addEvent({
+      delay: 3000,
+      loop: true,
+      callback: () => {
+        this.spawnInvader();
+      },
+    });
 
     const temple = new Temple(this, 608, 286);
     this.add.existing(temple);
@@ -72,19 +80,48 @@ export default class Game extends Phaser.Scene {
   }
 
   spawnInvader() {
-    const invader = new Invader(this, 16, 270);
-    this.invaders = [invader];
+    type InvaderSpawnZone = {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      initialSwimDirection: "left" | "right" | "up";
+    };
+
+    const invaderSpawnZones: InvaderSpawnZone[] = [
+      { x: 0, y: 6, width: 1, height: 11, initialSwimDirection: "right" },
+      { x: 7, y: 22, width: 15, height: 2, initialSwimDirection: "up" },
+      { x: 28, y: 6, width: 2, height: 11, initialSwimDirection: "left" },
+    ];
+    const zone = Phaser.Utils.Array.GetRandom(invaderSpawnZones);
+    const rand = Phaser.Math.Between;
+    const tileX = rand(zone.x, zone.x + zone.width);
+    const tileY = rand(zone.y, zone.y + zone.height);
+    const { x, y } = this.layer.tileToWorldXY(tileX, tileY);
+    //console.log(`Invader spawning at ${tileX} ${tileY}`);
+    const invader = new Invader(this, x, y);
+    this.invaders.push(invader);
     this.add.existing(invader);
-    invader.moveTo(new Phaser.Math.Vector2(200, 270));
+    const { targetX, targetY } = selectFloodTarget(
+      { x: tileX, y: tileY },
+      zone.initialSwimDirection,
+      this.layer
+    );
+    // console.log(
+    //   `Invader targeting: ${this.layer.worldToTileX(
+    //     targetX
+    //   )} ${this.layer.worldToTileY(targetY)}`
+    // );
+    invader.moveTo(new Phaser.Math.Vector2(targetX, targetY));
     invader.on(INVADER_FLOOD, () => {
       const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
-      console.log(
-        "The invader is flooding at: ",
-        invaderPos.x,
-        " ",
-        invaderPos.y
-      );
-      this.layer.putTileAt(0, invaderPos.x + 1, invaderPos.y);
+      // console.log(
+      //   "The invader is flooding at: ",
+      //   this.layer.worldToTileX(invader.x),
+      //   " ",
+      //   this.layer.worldToTileY(invader.y)
+      // );
+      this.layer.putTileAt(0, invaderPos.x, invaderPos.y);
       // TODO: warriors should check if they are sunk
       // TODO: tell invader it has successfully flooded
     });
