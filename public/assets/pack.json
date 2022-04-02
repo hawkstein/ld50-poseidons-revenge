@@ -20,6 +20,11 @@
         "type": "image",
         "key": "temple",
         "url": "assets/Temple.png"
+      },
+      {
+        "type": "image",
+        "key": "poseidon",
+        "url": "assets/Poseidon.png"
       }
     ]
   }

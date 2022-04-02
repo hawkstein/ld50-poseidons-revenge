@@ -5,6 +5,7 @@ import { Warrior } from "game-objects/Warrior";
 import findPath from "game-objects/findPath";
 import { Invader, INVADER_FLOOD } from "game-objects/Invader";
 import { Temple } from "game-objects/Temple";
+import { Poseidon } from "game-objects/Poseidon";
 export default class Game extends Phaser.Scene {
   private warrior!: Warrior;
   private invaders: Invader[] = [];
@@ -63,6 +64,9 @@ export default class Game extends Phaser.Scene {
     const temple = new Temple(this, 608, 286);
     this.add.existing(temple);
     temple.startPraying();
+
+    const poseidon = new Poseidon(this, 480, 100);
+    this.add.existing(poseidon);
   }
 
   spawnInvader() {

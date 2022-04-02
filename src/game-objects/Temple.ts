@@ -25,6 +25,9 @@ export class Temple extends Phaser.GameObjects.Sprite {
       this.progressPercentage
     );
     //TODO if progress is past 100 then emit end event
+    if (this.progressPercentage >= 100) {
+      this.updateEvent?.destroy();
+    }
   }
 
   destroy() {
