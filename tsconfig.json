@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@scenes": ["./scenes"],
+      "@scenes/*": ["./scenes/*"],
+      "@utils/*": ["./utils/*"],
+      "@components/*": ["./components/*"]
+    },
+    "target": "ES2020",
+    "module": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "scripthost"],
+    "moduleResolution": "Node",
+    "types": ["vite/client"],
+    "allowJs": false, // :tick:
+    "allowSyntheticDefaultImports": true, //:tick
+    "useDefineForClassFields": true, // check - should probably be true
+    "strict": true, // :tick:
+    "skipLibCheck": false, // check
+    "sourceMap": true, // check
+    "resolveJsonModule": true, //:tick:
+    "esModuleInterop": false, //:tick"
+    "noEmit": true, //:tick
+    "noUnusedLocals": true, //check
+    "noUnusedParameters": true, //check
+    "noImplicitReturns": true, //check
+    "forceConsistentCasingInFileNames": true, //:tick//
+    "isolatedModules": true // check
+  },
+  "include": ["src"] // see if this just works :)
+}

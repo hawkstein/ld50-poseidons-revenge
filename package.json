@@ -1,0 +1,23 @@
+{
+  "name": "ld50-phaser-base-template",
+  "version": "0.1.0",
+  "description": "Ludum Dare 50 Compo Entry",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-replace": "^4.0.0",
+    "@types/node": "^17.0.21",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0",
+    "vite-tsconfig-paths": "^3.4.1"
+  },
+  "dependencies": {
+    "localforage": "^1.10.0",
+    "phaser": "^3.55.2"
+  }
+}

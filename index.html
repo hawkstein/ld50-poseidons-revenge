@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ludum Dare 50 - Untitled Compo Entry</title>
+    <script type="module" src="/src/index.ts"></script>
+    <link
+      rel="preload"
+      as="font"
+      href="/KenneyMiniSquare.ttf"
+      type="font/ttf"
+    />
+    <style type="text/css">
+      body {
+        margin: 0;
+        background-color: #111;
+        display: grid;
+        place-content: center;
+        height: 100vh;
+      }
+
+      #game {
+        width: 1920px;
+        height: 1080px;
+      }
+
+      @font-face {
+        font-family: "KenneyMiniSquare";
+        src: url("Kenney-Mini-Square.woff2") format("woff2"),
+          url("Kenney-Mini-Square.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+  </body>
+</html>
