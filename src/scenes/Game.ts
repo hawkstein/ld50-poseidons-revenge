@@ -63,7 +63,7 @@ export default class Game extends Phaser.Scene {
     this.add.existing(this.warrior);
 
     this.time.addEvent({
-      delay: 3000,
+      delay: 5000,
       loop: true,
       callback: () => {
         this.spawnInvader();

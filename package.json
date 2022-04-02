@@ -1,6 +1,6 @@
 {
   "name": "ld50-poseidons-revenge",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ludum Dare 50 Compo Entry",
   "scripts": {
     "dev": "vite",
