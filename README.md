@@ -1,8 +1,8 @@
-# Untitled Game
+# Poseidon's Revenge
 
-The Ludum Dare 50 theme is "??"
+The Ludum Dare 50 theme is "Delay the inevitable"
 
-Game intro/description can go here.
+Your island has angered the god Poseidon. Defend your islanders whilst they petition his rival god Athena to protect an escape boat.
 
 ## Ludum Dare 50 Compo Entry
 
