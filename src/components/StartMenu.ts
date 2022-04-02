@@ -1,5 +1,5 @@
 import Scenes from "@scenes";
-import { MenuButton } from "game-objects/MenuButton";
+import { MenuButton } from "@components/MenuButton";
 import Phaser from "phaser";
 
 export default class StartMenu {

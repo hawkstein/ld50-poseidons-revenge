@@ -1,78 +1,91 @@
 import Phaser from "phaser";
 import Scenes from "@scenes";
-import { MenuButton } from "game-objects/MenuButton";
-
+import levelData from "./levelData";
+import { Warrior } from "game-objects/Warrior";
+import findPath from "game-objects/findPath";
+import { Invader, INVADER_FLOOD } from "game-objects/Invader";
+import { Temple } from "game-objects/Temple";
 export default class Game extends Phaser.Scene {
-  private keyActions: { key: Phaser.Input.Keyboard.Key; action: () => void }[] =
-    [];
-  private inputLog?: Phaser.GameObjects.Text;
+  private warrior!: Warrior;
+  private invaders: Invader[] = [];
+  private layer!: Phaser.Tilemaps.TilemapLayer;
 
   constructor() {
     super(Scenes.GAME);
   }
 
   create() {
-    const message = this.add.text(
-      this.cameras.main.centerX,
-      this.cameras.main.centerY - 200,
-      "Ludum Dare 50 Untitled Compo Entry",
-      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
+    // Create level data from JSON
+    // Create TileMap from level data
+    const TILE_SIDE = 32;
+    const map = this.make.tilemap({
+      data: levelData,
+      tileWidth: TILE_SIDE,
+      tileHeight: TILE_SIDE,
+      width: 32,
+      height: 24,
+    });
+    const tiles = map.addTilesetImage(
+      "tileset",
+      undefined,
+      TILE_SIDE,
+      TILE_SIDE,
+      1,
+      2
     );
-    message.x -= message.width / 2;
-    message.y -= message.height / 2;
+    this.layer = map.createLayer(0, tiles);
 
-    this.inputLog = this.add.text(
-      this.cameras.main.centerX,
-      this.cameras.main.centerY - 100,
-      "No input detected",
-      { color: "#fff", fontSize: "36px" }
+    this.input.on(
+      Phaser.Input.Events.POINTER_UP,
+      (pointer: Phaser.Input.Pointer) => {
+        const { worldX, worldY } = pointer;
+
+        //const startVec = layer.worldToTileXY(this.faune.x, this.faune.y)
+        const targetVec = this.layer.worldToTileXY(worldX, worldY);
+
+        //console.log(targetVec);
+
+        const warriorPos = this.layer.worldToTileXY(
+          this.warrior.x,
+          this.warrior.y
+        );
+
+        this.warrior.moveAlong(findPath(warriorPos, targetVec, this.layer));
+      }
     );
-    this.inputLog.x -= this.inputLog.width / 2;
-    this.inputLog.y -= this.inputLog.height / 2;
+    this.warrior = new Warrior(this, 304, 304);
+    this.warrior.on(Phaser.Input.Events.POINTER_UP, () => {
+      this.warrior.select();
+    });
+    this.add.existing(this.warrior);
+    this.spawnInvader();
 
-    const upAction = {
-      key: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
-      action: () => {
-        this.inputLog?.setText("Up Key");
-      },
-    };
-    const downAction = {
-      key: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
-      action: () => {
-        this.inputLog?.setText("Down Key");
-      },
-    };
-    const leftAction = {
-      key: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
-      action: () => {
-        this.inputLog?.setText("Left Key");
-      },
-    };
-    const rightAction = {
-      key: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
-      action: () => {
-        this.inputLog?.setText("Right Key");
-      },
-    };
-    this.keyActions = [upAction, downAction, leftAction, rightAction];
+    const temple = new Temple(this, 608, 286);
+    this.add.existing(temple);
+    temple.startPraying();
+  }
 
-    new MenuButton({
-      scene: this,
-      label: "Back to the menu",
-      onClick: () => {
-        this.scene.start(Scenes.START);
-      },
-      x: this.cameras.main.centerX,
-      y: 400,
+  spawnInvader() {
+    const invader = new Invader(this, 16, 270);
+    this.invaders = [invader];
+    this.add.existing(invader);
+    invader.moveTo(new Phaser.Math.Vector2(200, 270));
+    invader.on(INVADER_FLOOD, () => {
+      const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
+      console.log(
+        "The invader is flooding at: ",
+        invaderPos.x,
+        " ",
+        invaderPos.y
+      );
+      this.layer.putTileAt(0, invaderPos.x + 1, invaderPos.y);
+      // TODO: warriors should check if they are sunk
+      // TODO: tell invader it has successfully flooded
     });
   }
 
   update() {
-    this.inputLog?.setText("No input detected");
-    this.keyActions.forEach((keyAction) => {
-      if (keyAction.key.isDown) {
-        keyAction.action();
-      }
-    });
+    this.warrior.update();
+    this.invaders.forEach((invader) => invader.update());
   }
 }

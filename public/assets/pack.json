@@ -1,5 +1,26 @@
 {
   "preload": {
-    "files": []
+    "files": [
+      {
+        "type": "image",
+        "key": "tileset",
+        "url": "assets/tileset.png"
+      },
+      {
+        "type": "image",
+        "key": "warrior",
+        "url": "assets/Warrior.png"
+      },
+      {
+        "type": "image",
+        "key": "invader",
+        "url": "assets/Invader.png"
+      },
+      {
+        "type": "image",
+        "key": "temple",
+        "url": "assets/Temple.png"
+      }
+    ]
   }
 }

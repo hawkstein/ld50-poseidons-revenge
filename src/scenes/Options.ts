@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Scenes from "@scenes";
-import { MenuButton } from "game-objects/MenuButton";
+import { MenuButton } from "@components/MenuButton";
 
 type BindingMap = {
   moveUp: KeyBinding;

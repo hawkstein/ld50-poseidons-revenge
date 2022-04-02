@@ -7,9 +7,9 @@ export default class Preload extends Phaser.Scene {
   }
 
   init() {
-    document.fonts.onloadingdone = (ev) => {
-      console.log(ev);
-    };
+    // document.fonts.onloadingdone = (ev) => {
+    //   console.log(ev);
+    // };
   }
 
   preload() {
@@ -24,6 +24,6 @@ export default class Preload extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start(Scenes.START);
+    this.scene.start(Scenes.GAME);
   }
 }
