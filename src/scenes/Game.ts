@@ -42,21 +42,22 @@ export default class Game extends Phaser.Scene {
       Phaser.Input.Events.POINTER_UP,
       (pointer: Phaser.Input.Pointer) => {
         const { worldX, worldY } = pointer;
-
-        //const startVec = layer.worldToTileXY(this.faune.x, this.faune.y)
         const targetVec = this.layer.worldToTileXY(worldX, worldY);
-
-        console.log(targetVec);
-
         const warriorPos = this.layer.worldToTileXY(
           this.warrior.x,
           this.warrior.y
         );
 
+        console.log(warriorPos);
+
         this.warrior.moveAlong(findPath(warriorPos, targetVec, this.layer));
       }
     );
-    this.warrior = new Warrior(this, 304, 304);
+    this.warrior = new Warrior(
+      this,
+      this.layer.tileToWorldY(10),
+      this.layer.tileToWorldY(8)
+    );
     this.warrior.on(Phaser.Input.Events.POINTER_UP, () => {
       this.warrior.select();
     });

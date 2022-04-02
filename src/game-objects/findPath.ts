@@ -12,7 +12,7 @@ const findPath = (
   target: Phaser.Math.Vector2,
   tileMapLayer: Phaser.Tilemaps.TilemapLayer
 ) => {
-  // no path if select invalid tile
+  // TODO: check other invalid targets here
   if (tileMapLayer.getTileAt(target.x, target.y).index <= 0) {
     return [];
   }
@@ -80,9 +80,10 @@ const findPath = (
   let currentPos = parentForKey[targetKey].position;
 
   while (currentKey !== startKey) {
+    // console.log(currentKey);
     const pos = tileMapLayer.tileToWorldXY(currentPos.x, currentPos.y);
-    pos.x += tileMapLayer.tilemap.tileWidth * 0.5;
-    pos.y += tileMapLayer.tilemap.tileHeight * 0.5;
+    //pos.x += tileMapLayer.tilemap.tileWidth * 0.5;
+    //pos.y += tileMapLayer.tilemap.tileHeight * 0.5;
 
     path.push(pos);
 
@@ -90,6 +91,9 @@ const findPath = (
     currentKey = key;
     currentPos = position;
   }
+
+  // const finalPos = new Phaser.Math.Vector2(target.x, target.y);
+  // path.push(finalPos);
 
   return path.reverse();
 };

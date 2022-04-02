@@ -43,12 +43,6 @@ const warriorMachine = createMachine({
             FINISHED_MOVING: "idle",
             FLEE: "fled",
           },
-          states: {
-            movingUp: {},
-            movingDown: {},
-            movingLeft: {},
-            movingRight: {},
-          },
         },
         shoring: {
           on: {
@@ -94,13 +88,21 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     this.on(Phaser.Input.Events.POINTER_UP, () => {
       console.log(this.service.state.value);
     });
+    this.setOrigin(0);
   }
 
   moveAlong(path: Phaser.Math.Vector2[]) {
-    console.log(path);
+    // console.log(
+    //   [...path].map((vector) => ({
+    //     x: Math.abs(vector.x / 32),
+    //     y: Math.abs(vector.y / 32),
+    //   }))
+    // );
+    console.log([...path]);
     if (!path || path.length <= 0) {
       return;
     }
+    this.service.send({ type: "MOVE" });
     this.movePath = path;
     this.moveTo(this.movePath.shift()!);
   }
@@ -126,12 +128,13 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       dx = this.moveToTarget.x - this.x;
       dy = this.moveToTarget.y - this.y;
 
-      if (Math.abs(dx) < 5) {
-        // use tilesize here
+      if (Math.abs(dx) < 2) {
         dx = 0;
+        this.x = this.moveToTarget.x;
       }
-      if (Math.abs(dy) < 5) {
+      if (Math.abs(dy) < 2) {
         dy = 0;
+        this.y = this.moveToTarget.y;
       }
 
       if (dx === 0 && dy === 0) {
@@ -139,7 +142,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
           this.moveTo(this.movePath.shift()!);
           return;
         }
-
+        this.service.send({ type: "FINISHED_MOVING" });
         this.moveToTarget = undefined;
       }
     }
@@ -176,7 +179,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       time > this.nextEnemyScan
     ) {
       this.nextEnemyScan = time += 500;
-      console.log("SCANNING FOR ENEMIES...");
+      // console.log("SCANNING FOR ENEMIES...");
       let enemyFound = false;
       enemies.forEach((enemy) => {
         if (
@@ -206,7 +209,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       time > this.nextEnemyScan
     ) {
       this.nextEnemyScan = time += 800;
-      console.log("Attacking!");
+      // console.log("Attacking!");
       const killed = this.currentEnemy?.damage(1);
       if (killed) {
         this.service.send({ type: "FINISHED_ATTACKING" });
