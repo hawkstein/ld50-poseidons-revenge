@@ -8,6 +8,11 @@
       },
       {
         "type": "image",
+        "key": "selection",
+        "url": "assets/Selection.png"
+      },
+      {
+        "type": "image",
         "key": "tileset",
         "url": "assets/tileset.png"
       },

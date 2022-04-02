@@ -12,8 +12,11 @@ import selectFloodTarget, {
 } from "game-objects/selectFloodTarget";
 export default class Game extends Phaser.Scene {
   private warrior!: Warrior;
+  private warriors: Warrior[] = [];
   private invaders: Invader[] = [];
   private layer!: Phaser.Tilemaps.TilemapLayer;
+  private selectedWarrior: Warrior | null = null;
+  private selectionRect!: Phaser.GameObjects.Sprite;
 
   constructor() {
     super(Scenes.GAME);
@@ -43,33 +46,45 @@ export default class Game extends Phaser.Scene {
     this.input.on(
       Phaser.Input.Events.POINTER_UP,
       (pointer: Phaser.Input.Pointer) => {
-        const { worldX, worldY } = pointer;
-        const targetVec = this.layer.worldToTileXY(worldX, worldY);
-        const warriorPos = this.layer.worldToTileXY(
-          this.warrior.x,
-          this.warrior.y
-        );
-
-        console.log(warriorPos);
-
-        this.warrior.moveAlong(findPath(warriorPos, targetVec, this.layer));
+        if (this.selectedWarrior) {
+          const { worldX, worldY } = pointer;
+          const targetVec = this.layer.worldToTileXY(worldX, worldY);
+          const warriorPos = this.layer.worldToTileXY(
+            this.selectedWarrior.x,
+            this.selectedWarrior.y
+          );
+          console.log(warriorPos);
+          console.log(this.selectedWarrior);
+          this.selectedWarrior?.moveAlong(
+            findPath(warriorPos, targetVec, this.layer)
+          );
+        }
       }
     );
-    this.warrior = new Warrior(
-      this,
-      this.layer.tileToWorldY(10),
-      this.layer.tileToWorldY(8)
-    );
-    this.warrior.on(Phaser.Input.Events.POINTER_UP, () => {
-      this.warrior.select();
+    const warriorPositions = [
+      [10, 8],
+      [14, 15],
+      [20, 12],
+    ];
+    warriorPositions.forEach(([x, y]) => {
+      const warrior = new Warrior(
+        this,
+        this.layer.tileToWorldY(x),
+        this.layer.tileToWorldY(y)
+      );
+      warrior.on(Phaser.Input.Events.POINTER_UP, () => {
+        warrior.select();
+        this.selectedWarrior = warrior;
+      });
+      this.add.existing(warrior);
+      this.warriors.push(warrior);
     });
-    this.add.existing(this.warrior);
 
     this.time.addEvent({
       delay: 5000,
       loop: true,
       callback: () => {
-        //this.spawnInvader();
+        this.spawnInvader();
       },
     });
 
@@ -89,6 +104,10 @@ export default class Game extends Phaser.Scene {
         );
       },
     });
+
+    this.selectionRect = this.add.sprite(0, 0, "selection");
+    this.selectionRect.visible = false;
+    this.selectionRect.setOrigin(0);
   }
 
   spawnInvader() {
@@ -159,7 +178,12 @@ export default class Game extends Phaser.Scene {
   }
 
   update(time: number) {
-    this.warrior.update(time, this.invaders);
+    this.warriors.forEach((warrior) => warrior.update(time, this.invaders));
     this.invaders.forEach((invader) => invader.update());
+    if (this.selectedWarrior) {
+      this.selectionRect.visible = true;
+      this.selectionRect.x = this.selectedWarrior.x;
+      this.selectionRect.y = this.selectedWarrior.y;
+    }
   }
 }

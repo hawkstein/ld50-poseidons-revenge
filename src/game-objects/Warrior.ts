@@ -166,13 +166,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     } else if (downDown) {
       this.y += speed;
     }
-    // else {
-    //   const parts = this.anims.currentAnim.key.split("-");
-    //   parts[1] = "idle";
-    //   this.anims.play(parts.join("-"));
-    //   //this.setVelocity(0, 0)
-    // }
-    // console.log(time);
+
     if (
       this.service.state.value.activity === "idle" &&
       time > this.nextEnemyScan
@@ -208,7 +202,6 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       time > this.nextEnemyScan
     ) {
       this.nextEnemyScan = time += 800;
-      // console.log("Attacking!");
       const killed = this.currentEnemy?.damage(1);
       if (killed) {
         this.service.send({ type: "FINISHED_ATTACKING" });
