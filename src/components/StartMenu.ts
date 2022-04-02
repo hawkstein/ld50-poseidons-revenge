@@ -38,6 +38,7 @@ export default class StartMenu {
     button.on("pointerover", () => {
       if (button.menuIndex !== undefined) {
         this.currentIndex = button.menuIndex;
+        console.log(this.currentIndex);
       }
     });
     button.menuIndex = this.buttons.push(button) - 1;
