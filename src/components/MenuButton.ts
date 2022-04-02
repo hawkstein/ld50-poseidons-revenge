@@ -23,6 +23,7 @@ export class MenuButton extends Phaser.GameObjects.Container {
       style: {
         color: "#fff",
         fontSize: "36px",
+        padding: { x: 10, y: 10 },
       },
     });
     this.buttonLabel.x -= this.buttonLabel.width / 2;
@@ -42,7 +43,9 @@ export class MenuButton extends Phaser.GameObjects.Container {
 
   setFocus(focus: boolean) {
     this.isFocused = focus;
-    this.buttonLabel.setBackgroundColor(this.isFocused ? "#ff0000" : "#000");
+    this.buttonLabel.setBackgroundColor(
+      this.isFocused ? "#000" : "transparent"
+    );
   }
 
   click() {

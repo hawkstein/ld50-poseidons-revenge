@@ -8,9 +8,15 @@ export default class Start extends Phaser.Scene {
   }
 
   create() {
-    const title = this.add.text(
+    this.add.image(
       this.cameras.main.centerX,
       this.cameras.main.centerY - 200,
+      "title_v1"
+    );
+
+    const title = this.add.text(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY + 50,
       "Ludum Dare 50",
       { color: "#fff", fontSize: "36px" }
     );
@@ -19,7 +25,7 @@ export default class Start extends Phaser.Scene {
 
     const subtitle = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY - 100,
+      this.cameras.main.centerY + 110,
       "Start Menu",
       { color: "#fff", fontSize: "36px" }
     );
@@ -29,7 +35,7 @@ export default class Start extends Phaser.Scene {
     const menu = new StartMenu(
       this,
       this.cameras.main.centerX,
-      this.cameras.main.centerY - 20
+      this.cameras.main.centerY + 180
     );
     menu.build();
   }

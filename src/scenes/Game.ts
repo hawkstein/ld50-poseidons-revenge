@@ -69,7 +69,7 @@ export default class Game extends Phaser.Scene {
       delay: 5000,
       loop: true,
       callback: () => {
-        this.spawnInvader();
+        //this.spawnInvader();
       },
     });
 

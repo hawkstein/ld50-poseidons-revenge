@@ -3,6 +3,11 @@
     "files": [
       {
         "type": "image",
+        "key": "title_v1",
+        "url": "assets/Title_v1.png"
+      },
+      {
+        "type": "image",
         "key": "tileset",
         "url": "assets/tileset.png"
       },
