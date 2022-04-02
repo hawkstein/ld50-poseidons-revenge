@@ -76,7 +76,16 @@ export default class Game extends Phaser.Scene {
 
     const poseidon = new Poseidon(this, 480, 100);
     this.add.existing(poseidon);
-    this.spawnSpring(14, 16);
+    this.time.addEvent({
+      delay: 20000,
+      loop: true,
+      callback: () => {
+        this.spawnSpring(
+          Phaser.Math.Between(8, 22),
+          Phaser.Math.Between(7, 16)
+        );
+      },
+    });
   }
 
   spawnInvader() {
@@ -131,15 +140,20 @@ export default class Game extends Phaser.Scene {
     const { x, y } = this.layer.tileToWorldXY(xTile, yTile);
     const spring = new Spring(this, x, y - 12);
     this.add.existing(spring);
-    const tintTile = (xAt: number, yAt: number) => {
-      const tile = this.layer.getTileAt(xAt, yAt);
-      tile.tint = 0x00aaff;
+    const floodTile = (xAt: number, yAt: number) => {
+      // const tile = this.layer.getTileAt(xAt, yAt);
+      this.layer.putTileAt(0, xAt, yAt);
     };
 
-    tintTile(xTile, yTile);
-    tintTile(xTile - 1, yTile);
-    tintTile(xTile - 1, yTile - 1);
-    tintTile(xTile, yTile - 1);
+    this.time.addEvent({
+      delay: 1200,
+      callback: () => {
+        floodTile(xTile, yTile);
+        floodTile(xTile - 1, yTile);
+        floodTile(xTile - 1, yTile - 1);
+        floodTile(xTile, yTile - 1);
+      },
+    });
   }
 
   update() {

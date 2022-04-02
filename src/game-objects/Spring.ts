@@ -15,7 +15,17 @@ export class Spring extends Phaser.GameObjects.Sprite {
 
     this.emitter.setPosition(this.x, this.y);
     this.emitter.setSpeed(50);
+
+    this.scene.time.addEvent({
+      delay: 10000,
+      callback: () => {
+        this.destroy();
+      },
+    });
   }
 
-  destroy() {}
+  destroy() {
+    this.emitter.remove();
+    super.destroy();
+  }
 }
