@@ -10,10 +10,14 @@ const toKey = (x: number, y: number) => `${x}x${y}`;
 const findPath = (
   start: Phaser.Math.Vector2,
   target: Phaser.Math.Vector2,
-  tileMapLayer: Phaser.Tilemaps.TilemapLayer
+  tileMapLayer: Phaser.Tilemaps.TilemapLayer,
+  bannedTiles: Phaser.Math.Vector2[] = []
 ) => {
-  // TODO: check other invalid targets here
   if (tileMapLayer.getTileAt(target.x, target.y).index <= 0) {
+    return [];
+  }
+
+  if (bannedTiles.some((tile) => target.equals(tile))) {
     return [];
   }
 
@@ -56,6 +60,12 @@ const findPath = (
       }
 
       if (tile.index <= 0) {
+        continue;
+      }
+
+      if (
+        bannedTiles.some((banned) => banned.x === tile.x && banned.y === tile.y)
+      ) {
         continue;
       }
 

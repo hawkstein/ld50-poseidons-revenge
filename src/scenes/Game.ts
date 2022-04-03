@@ -96,6 +96,7 @@ export default class Game extends Phaser.Scene {
   private temple!: Temple;
   private lossTime: number | null = null;
   private tutorialMode: boolean = true;
+  private templeTiles: Phaser.Math.Vector2[] = [];
 
   constructor() {
     super(Scenes.GAME);
@@ -165,6 +166,14 @@ export default class Game extends Phaser.Scene {
 
     // TODO: get temple position from level data
     this.temple = new Temple(this, 608, 286);
+    const templeSpace = this.layer.worldToTileXY(
+      this.temple.x,
+      this.temple.y + TILE_SIDE
+    );
+    this.templeTiles = [
+      templeSpace,
+      new Phaser.Math.Vector2(templeSpace.x - 1, templeSpace.y),
+    ];
     this.add.existing(this.temple);
     this.temple.on("WIN", () => {
       this.service.send({ type: "WIN" });
@@ -223,7 +232,7 @@ export default class Game extends Phaser.Scene {
           );
           // TODO: fix this path finding
           this.selectedWarrior?.moveAlong(
-            findPath(warriorPos, targetVec, this.layer)
+            findPath(warriorPos, targetVec, this.layer, this.templeTiles)
           );
         }
       }
