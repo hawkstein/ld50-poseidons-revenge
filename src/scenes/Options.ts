@@ -56,9 +56,9 @@ export default class Options extends Phaser.Scene {
   create() {
     const message = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY - 200,
-      "Options Screen",
-      { color: "#fff", fontSize: "36px" }
+      this.cameras.main.centerY - 120,
+      "Currently unimplemented.",
+      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
     );
     message.x -= message.width / 2;
     message.y -= message.height / 2;
@@ -73,19 +73,19 @@ export default class Options extends Phaser.Scene {
       y: 400,
     });
 
-    let optionLabelY = 150;
-    Object.values(this.keyBindings).forEach((binding) => {
-      const optionLabel = this.add.text(
-        this.cameras.main.centerX,
-        optionLabelY,
-        `${binding.label}: ${binding.keyCodes
-          .map(mapKeyCodesToLabel)
-          .join(", ")}`,
-        { color: "#fff", fontSize: "24px" }
-      );
-      optionLabel.x -= optionLabel.width / 2;
-      optionLabel.y -= optionLabel.height / 2;
-      optionLabelY += 50;
-    });
+    // let optionLabelY = 150;
+    // Object.values(this.keyBindings).forEach((binding) => {
+    //   const optionLabel = this.add.text(
+    //     this.cameras.main.centerX,
+    //     optionLabelY,
+    //     `${binding.label}: ${binding.keyCodes
+    //       .map(mapKeyCodesToLabel)
+    //       .join(", ")}`,
+    //     { color: "#fff", fontSize: "24px" }
+    //   );
+    //   optionLabel.x -= optionLabel.width / 2;
+    //   optionLabel.y -= optionLabel.height / 2;
+    //   optionLabelY += 50;
+    // });
   }
 }
