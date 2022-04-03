@@ -14,6 +14,7 @@ import { getOption, WARRIOR_RANGE_KEY } from "data";
 import { Speech } from "game-objects/Speech";
 import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
+import getThreat from "@utils/getThreat";
 
 type InvaderSpawnZone = {
   x: number;
@@ -335,7 +336,7 @@ export default class Game extends Phaser.Scene {
       this,
       250,
       50,
-      "Sea-people! Sink this offensive island!",
+      "Sea-beasts! Sink this offensive island!",
       this.tutorialMode ? 25400 : 6000,
       2000
     );
@@ -424,6 +425,9 @@ export default class Game extends Phaser.Scene {
     if (this.service.state.value.gameplay !== "playing") {
       return;
     }
+
+    const threat = new Speech(this, 50, 50, getThreat(), 0, 1800);
+    this.add.existing(threat);
 
     const { x, y } = this.layer.tileToWorldXY(xTile, yTile);
     const spring = new Spring(this, x, y - 12);
