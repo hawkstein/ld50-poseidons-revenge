@@ -8,12 +8,14 @@ type GameData = {
 const FORAGE_KEY = "ld-50-untitled-game";
 const STORE_KEY = "data";
 
+const BASE_SPAWN_RATE_KEY = "invaderSpawnRate";
+
 const store: GameData = {
   keys: new Map(),
   options: new Map<string, boolean | number | string>([
     ["prayerRate", 5000],
-    ["invaderSpawnRate", 3000],
-    ["tutorialMode", true],
+    [BASE_SPAWN_RATE_KEY, 2000],
+    ["tutorialMode", false],
   ]),
 };
 
@@ -63,4 +65,5 @@ export {
   setKey as setFlag,
   getOption,
   setOption,
+  BASE_SPAWN_RATE_KEY,
 };

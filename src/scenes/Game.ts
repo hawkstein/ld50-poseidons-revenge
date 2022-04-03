@@ -83,6 +83,8 @@ const buildMachine = (emitter: Phaser.Events.EventEmitter) =>
       },
     }
   );
+
+const ARROW_KEY = "arrow";
 export default class Game extends Phaser.Scene {
   private service!: any;
   private layer!: Phaser.Tilemaps.TilemapLayer;
@@ -90,6 +92,7 @@ export default class Game extends Phaser.Scene {
   private selectionRect!: Phaser.GameObjects.Sprite;
   private warriors: Warrior[] = [];
   private invaders: Invader[] = [];
+  private arrows!: Phaser.GameObjects.Group;
   private temple!: Temple;
   private lossTime: number | null = null;
   private tutorialMode: boolean = true;
@@ -110,6 +113,10 @@ export default class Game extends Phaser.Scene {
     });
 
     this.tutorialMode = getOption("tutorialMode") as boolean;
+
+    this.arrows = this.add.group({
+      defaultKey: ARROW_KEY,
+    });
   }
 
   create() {
@@ -190,6 +197,18 @@ export default class Game extends Phaser.Scene {
         warrior.select();
         this.selectedWarrior = warrior;
       });
+      warrior.on(
+        "FIRE_ARROW",
+        (tweenData: {
+          x: number;
+          y: number;
+          targetX: number;
+          targetY: number;
+        }) => {
+          const { x, y, targetX, targetY } = tweenData;
+          this.spawnArrow(x, y, targetX, targetY);
+        }
+      );
     });
 
     this.input.on(
@@ -385,6 +404,24 @@ export default class Game extends Phaser.Scene {
         floodTile(xTile - 1, yTile);
         floodTile(xTile - 1, yTile - 1);
         floodTile(xTile, yTile - 1);
+      },
+    });
+  }
+
+  spawnArrow(x: number, y: number, targetX: number, targetY: number) {
+    const arrow: Phaser.GameObjects.Sprite = this.arrows.get(x, y, ARROW_KEY);
+    arrow.setVisible(true);
+    arrow.setActive(true);
+    const rotation = Phaser.Math.Angle.Between(x, y, targetX, targetY);
+    arrow.rotation = rotation;
+    this.tweens.add({
+      targets: arrow,
+      x: targetX,
+      y: targetY,
+      duration: 500,
+      onComplete: () => {
+        this.arrows!.killAndHide(arrow);
+        this.tweens.killTweensOf(arrow);
       },
     });
   }

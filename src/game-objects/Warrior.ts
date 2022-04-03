@@ -1,3 +1,4 @@
+import { HALF_SIDE } from "constants";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
 import { Invader } from "./Invader";
@@ -210,6 +211,15 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       this.service.state.value.activity === "attacking" &&
       time > this.nextEnemyScan
     ) {
+      if (this.currentEnemy) {
+        this.emit("FIRE_ARROW", {
+          x: this.x + HALF_SIDE,
+          y: this.y + HALF_SIDE,
+          targetX: this.currentEnemy.x + HALF_SIDE,
+          targetY: this.currentEnemy.y + HALF_SIDE,
+        });
+      }
+
       this.nextEnemyScan = time += 800;
       const killed = this.currentEnemy?.damage(1);
       if (killed) {
