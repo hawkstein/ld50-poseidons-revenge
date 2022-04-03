@@ -12,14 +12,16 @@ const BASE_SPAWN_RATE_KEY = "invaderSpawnRate";
 const SFX_KEY = "sfx";
 const BG_MUSIC_KEY = "bgMusic";
 const WARRIOR_RANGE_KEY = "warriorRange";
+const INVADER_SPEED_KEY = "invaderSpeed";
 
 const store: GameData = {
   keys: new Map(),
   options: new Map<string, boolean | number | string>([
     ["prayerRate", 5000],
-    [BASE_SPAWN_RATE_KEY, 2000],
+    [BASE_SPAWN_RATE_KEY, 2200],
     ["tutorialMode", true],
     [WARRIOR_RANGE_KEY, 140],
+    [INVADER_SPEED_KEY, 1],
   ]),
 };
 
@@ -73,4 +75,5 @@ export {
   SFX_KEY,
   BG_MUSIC_KEY,
   WARRIOR_RANGE_KEY,
+  INVADER_SPEED_KEY,
 };

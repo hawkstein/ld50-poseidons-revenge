@@ -1,3 +1,4 @@
+import { getOption, INVADER_SPEED_KEY } from "data";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
 import buildConfig from "./invaderMachineConfig";
@@ -7,6 +8,7 @@ export const INVADER_FLOOD = "INVADER_FLOOD";
 export class Invader extends Phaser.GameObjects.Sprite {
   private service: any;
   private moveToTarget?: Phaser.Math.Vector2;
+  private speed: number = getOption(INVADER_SPEED_KEY) as number;
 
   public health: number = 3;
 
@@ -58,8 +60,7 @@ export class Invader extends Phaser.GameObjects.Sprite {
       dx = this.moveToTarget.x - this.x;
       dy = this.moveToTarget.y - this.y;
 
-      const speed = 0.5;
-      const threshold = speed * 0.5;
+      const threshold = this.speed * 0.5;
 
       if (Math.abs(dx) < threshold) {
         // use tilesize here
@@ -82,17 +83,17 @@ export class Invader extends Phaser.GameObjects.Sprite {
       const downDown = dy > 0;
 
       if (leftDown) {
-        this.x -= speed;
+        this.x -= this.speed;
 
         this.flipX = true;
       } else if (rightDown) {
-        this.x += speed;
+        this.x += this.speed;
 
         this.flipX = false;
       } else if (upDown) {
-        this.y -= speed;
+        this.y -= this.speed;
       } else if (downDown) {
-        this.y += speed;
+        this.y += this.speed;
       }
     }
   }
