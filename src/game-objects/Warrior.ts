@@ -3,6 +3,10 @@ import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
 import { Invader } from "./Invader";
 
+const LEAP_TO_SAFETY = "LEAP_TO_SAFETY";
+
+export { LEAP_TO_SAFETY };
+
 const warriorMachine = createMachine({
   id: "warrior",
   type: "parallel",
@@ -57,8 +61,8 @@ const warriorMachine = createMachine({
           },
         },
         drowning: {
-          on: {
-            DEATH: "dead",
+          after: {
+            1000: "dead",
           },
         },
         dead: {
@@ -81,15 +85,13 @@ export class Warrior extends Phaser.GameObjects.Sprite {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "warrior");
-    this.service = interpret(warriorMachine);
-    // .onTransition((state) => {
-    //   console.log(state.value);
-    // });
+    this.service = interpret(warriorMachine).onTransition((state: any) => {
+      if (state.value.activity === "escaping") {
+        this.emit(LEAP_TO_SAFETY);
+      }
+    });
     this.setInteractive();
     this.service.start();
-    this.on(Phaser.Input.Events.POINTER_UP, () => {
-      console.log(this.service.state.value);
-    });
     this.setOrigin(0);
   }
 
@@ -112,11 +114,6 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     this.moveToTarget = target;
   }
 
-  destroy(fromScene?: boolean): void {
-    this.service.stop();
-    super.destroy(fromScene);
-  }
-
   select() {
     this.service.send({ type: "SELECT" });
   }
@@ -127,6 +124,18 @@ export class Warrior extends Phaser.GameObjects.Sprite {
 
   isDead() {
     return this.service.state.value.activity === "dead";
+  }
+
+  isMoving() {
+    return this.service.state.value.activity === "moving";
+  }
+
+  handleFlooding() {
+    this.service.send({ type: "SUNK" });
+  }
+
+  drown() {
+    this.service.send({ type: "DROWN" });
   }
 
   update(time: number, enemies: Invader[]) {
@@ -182,14 +191,13 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       time > this.nextEnemyScan
     ) {
       this.nextEnemyScan = time += 500;
-      // console.log("SCANNING FOR ENEMIES...");
       let enemyFound = false;
       enemies.forEach((enemy) => {
         if (
           !enemyFound &&
           Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y) < 200
         ) {
-          this.service.send({ type: "ATTACK" });
+          // this.service.send({ type: "ATTACK" });
           enemyFound = true;
           this.currentEnemy = enemy;
         }
@@ -226,5 +234,10 @@ export class Warrior extends Phaser.GameObjects.Sprite {
         this.service.send({ type: "FINISHED_ATTACKING" });
       }
     }
+  }
+
+  destroy(fromScene?: boolean): void {
+    this.service.stop();
+    super.destroy(fromScene);
   }
 }

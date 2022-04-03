@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import Scenes from "@scenes";
 import levelData from "./levelData";
-import { Warrior } from "game-objects/Warrior";
+import { LEAP_TO_SAFETY, Warrior } from "game-objects/Warrior";
 import findPath from "game-objects/findPath";
 import { Invader, INVADER_FLOOD } from "game-objects/Invader";
 import { Temple } from "game-objects/Temple";
@@ -13,6 +13,7 @@ import selectFloodTarget, {
 import { createMachine, interpret } from "xstate";
 import { getOption } from "data";
 import { Speech } from "game-objects/Speech";
+import checkNeighbours from "game-objects/checkNeighbours";
 
 type InvaderSpawnZone = {
   x: number;
@@ -218,6 +219,15 @@ export default class Game extends Phaser.Scene {
           this.spawnArrow(x, y, targetX, targetY);
         }
       );
+      warrior.on(LEAP_TO_SAFETY, () => {
+        const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
+        const safety = checkNeighbours(warriorPos, 1, this.layer);
+        if (warriorPos.equals(safety)) {
+          warrior.drown();
+        } else {
+          warrior.moveAlong([this.layer.tileToWorldXY(safety.x, safety.y)]);
+        }
+      });
     });
 
     this.input.on(
@@ -238,7 +248,6 @@ export default class Game extends Phaser.Scene {
       }
     );
 
-    // if tutorial mode
     this.time.addEvent({
       delay: this.tutorialMode ? 20000 : 0,
       callback: () => {
@@ -385,8 +394,20 @@ export default class Game extends Phaser.Scene {
     invader.on(INVADER_FLOOD, () => {
       const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
       this.layer.putTileAt(0, invaderPos.x, invaderPos.y);
-      // TODO: warriors should check if they are sunk
-
+      this.warriors.forEach((warrior) => {
+        const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
+        if (warriorPos.equals(invaderPos) && warrior) {
+          warrior.handleFlooding();
+        }
+      });
+      if (
+        this.templeTiles.every((tilePos) => {
+          const tile = this.layer.getTileAt(tilePos.x, tilePos.y);
+          return tile.index <= 0;
+        })
+      ) {
+        this.handleLevelFailure();
+      }
       const newTile = selectNearbyTileToFlood(
         { x: invaderPos.x, y: invaderPos.y },
         this.layer
@@ -450,16 +471,19 @@ export default class Game extends Phaser.Scene {
     }
 
     if (this.lossTime && time > this.lossTime) {
-      console.log(this.lossTime, time);
-      this.service.send({ type: "FAIL" });
-      const cam = this.cameras.main;
-      cam.fade(1400, 0, 0, 0);
-      cam.once("camerafadeoutcomplete", () => this.scene.start(Scenes.START));
+      this.handleLevelFailure();
     } else if (
       !this.lossTime &&
       this.warriors.every((warrior) => warrior.isDead()) // TODO: change to a check whenever a warrior dies.
     ) {
       this.lossTime = time + 1200; // Should this slight advantage be in the options?
     }
+  }
+
+  handleLevelFailure() {
+    this.service.send({ type: "FAIL" });
+    const cam = this.cameras.main;
+    cam.fade(1400, 0, 0, 0);
+    cam.once("camerafadeoutcomplete", () => this.scene.start(Scenes.START));
   }
 }
