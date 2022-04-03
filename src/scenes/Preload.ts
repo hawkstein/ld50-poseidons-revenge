@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Scenes from "@scenes";
+import { loadGameData } from "data";
 
 export default class Preload extends Phaser.Scene {
   constructor() {
@@ -10,6 +11,7 @@ export default class Preload extends Phaser.Scene {
     // document.fonts.onloadingdone = (ev) => {
     //   console.log(ev);
     // };
+    loadGameData();
   }
 
   preload() {

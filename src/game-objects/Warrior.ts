@@ -80,9 +80,10 @@ export class Warrior extends Phaser.GameObjects.Sprite {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "warrior");
-    this.service = interpret(warriorMachine).onTransition((state) => {
-      console.log(state.value);
-    });
+    this.service = interpret(warriorMachine);
+    // .onTransition((state) => {
+    //   console.log(state.value);
+    // });
     this.setInteractive();
     this.service.start();
     this.on(Phaser.Input.Events.POINTER_UP, () => {
@@ -117,6 +118,14 @@ export class Warrior extends Phaser.GameObjects.Sprite {
 
   select() {
     this.service.send({ type: "SELECT" });
+  }
+
+  deselect() {
+    this.service.send({ type: "DESELECT" });
+  }
+
+  isDead() {
+    return this.service.state.value.activity === "dead";
   }
 
   update(time: number, enemies: Invader[]) {

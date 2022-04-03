@@ -14,7 +14,7 @@ export class Invader extends Phaser.GameObjects.Sprite {
     super(scene, x, y, "invader");
     const invaderMachine = createMachine(buildConfig(2000));
     this.service = interpret(invaderMachine).onTransition((state) => {
-      console.log(`Invader: ${state.value}`);
+      // console.log(`Invader: ${state.value}`);
       if (state.value === "finished_flooding") {
         this.emit(INVADER_FLOOD);
       } else if (state.value === "dead") {

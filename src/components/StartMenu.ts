@@ -7,7 +7,7 @@ export default class StartMenu {
   private x: number;
   private y: number;
   private buttons: MenuButton[] = [];
-  private currentIndex: number = 0;
+  // private currentIndex: number = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.scene = scene;
@@ -35,12 +35,12 @@ export default class StartMenu {
       label,
       onClick: () => this.scene.scene.start(to),
     });
-    button.on("pointerover", () => {
-      if (button.menuIndex !== undefined) {
-        this.currentIndex = button.menuIndex;
-        console.log(this.currentIndex);
-      }
-    });
+    // button.on("pointerover", () => {
+    //   if (button.menuIndex !== undefined) {
+    //     this.currentIndex = button.menuIndex;
+    //     console.log(this.currentIndex);
+    //   }
+    // });
     button.menuIndex = this.buttons.push(button) - 1;
     this.y += 50;
   }

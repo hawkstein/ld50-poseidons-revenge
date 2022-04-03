@@ -10,7 +10,10 @@ const STORE_KEY = "data";
 
 const store: GameData = {
   keys: new Map(),
-  options: new Map(),
+  options: new Map([
+    ["prayerRate", 5000],
+    ["invaderSpawnRate", 3000],
+  ]),
 };
 
 async function saveGameData() {
@@ -18,7 +21,7 @@ async function saveGameData() {
     name: FORAGE_KEY,
     storeName: STORE_KEY,
   });
-  await localforage.setItem("flags", store.keys);
+  await localforage.setItem("keys", store.keys);
   await localforage.setItem("options", store.options);
 }
 
@@ -27,7 +30,7 @@ async function loadGameData() {
     name: FORAGE_KEY,
     storeName: STORE_KEY,
   });
-  store.keys = (await localforage.getItem("flags")) ?? new Map();
+  store.keys = (await localforage.getItem("keys")) ?? store.keys;
   store.options = (await localforage.getItem("options")) ?? store.options;
 }
 
@@ -39,8 +42,8 @@ function setKey(key: string, value: string | string[]) {
   store.keys.set(key, value);
 }
 
-function getOption(key: string) {
-  return store.options.get(key);
+function getOption<T>(key: string) {
+  return store.options.get(key) as unknown as T;
 }
 
 function setOption(key: string, value: boolean | number | string) {
