@@ -19,7 +19,7 @@ export default class Start extends Phaser.Scene {
     );
     this.tridents.scale = 2;
 
-    const title = this.add.image(
+    this.add.image(
       this.cameras.main.centerX,
       this.cameras.main.centerY - 170,
       "title_v1"

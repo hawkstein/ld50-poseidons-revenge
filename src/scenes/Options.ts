@@ -2,55 +2,55 @@ import Phaser from "phaser";
 import Scenes from "@scenes";
 import { MenuButton } from "@components/MenuButton";
 
-type BindingMap = {
-  moveUp: KeyBinding;
-  moveDown: KeyBinding;
-  moveLeft: KeyBinding;
-  moveRight: KeyBinding;
-};
+// type BindingMap = {
+//   moveUp: KeyBinding;
+//   moveDown: KeyBinding;
+//   moveLeft: KeyBinding;
+//   moveRight: KeyBinding;
+// };
 
-type KeyBinding = {
-  label: string;
-  keyCodes: number[];
-};
+// type KeyBinding = {
+//   label: string;
+//   keyCodes: number[];
+// };
 
-function mapKeyCodesToLabel(code: number) {
-  const label = Object.entries(Phaser.Input.Keyboard.KeyCodes).find(
-    ([_, keyCode]) => keyCode === code
-  )?.[0];
-  if (!label) {
-    return "NO KEY FOUND";
-  }
-  return `${label} KEY`;
-}
+// function mapKeyCodesToLabel(code: number) {
+//   const label = Object.entries(Phaser.Input.Keyboard.KeyCodes).find(
+//     ([_, keyCode]) => keyCode === code
+//   )?.[0];
+//   if (!label) {
+//     return "NO KEY FOUND";
+//   }
+//   return `${label} KEY`;
+// }
 
 export default class Options extends Phaser.Scene {
-  private keyBindings: BindingMap;
+  // private keyBindings: BindingMap;
 
   constructor() {
     super(Scenes.OPTIONS);
 
-    this.keyBindings = {
-      moveUp: {
-        label: "Up",
-        keyCodes: [
-          Phaser.Input.Keyboard.KeyCodes.UP,
-          Phaser.Input.Keyboard.KeyCodes.W,
-        ],
-      },
-      moveDown: {
-        label: "Down",
-        keyCodes: [Phaser.Input.Keyboard.KeyCodes.DOWN],
-      },
-      moveLeft: {
-        label: "Left",
-        keyCodes: [Phaser.Input.Keyboard.KeyCodes.LEFT],
-      },
-      moveRight: {
-        label: "Right",
-        keyCodes: [Phaser.Input.Keyboard.KeyCodes.RIGHT],
-      },
-    };
+    // this.keyBindings = {
+    //   moveUp: {
+    //     label: "Up",
+    //     keyCodes: [
+    //       Phaser.Input.Keyboard.KeyCodes.UP,
+    //       Phaser.Input.Keyboard.KeyCodes.W,
+    //     ],
+    //   },
+    //   moveDown: {
+    //     label: "Down",
+    //     keyCodes: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+    //   },
+    //   moveLeft: {
+    //     label: "Left",
+    //     keyCodes: [Phaser.Input.Keyboard.KeyCodes.LEFT],
+    //   },
+    //   moveRight: {
+    //     label: "Right",
+    //     keyCodes: [Phaser.Input.Keyboard.KeyCodes.RIGHT],
+    //   },
+    // };
   }
 
   create() {
