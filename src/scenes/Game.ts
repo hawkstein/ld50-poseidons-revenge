@@ -10,7 +10,12 @@ import selectFloodTarget, {
   selectNearbyTileToFlood,
 } from "game-objects/selectFloodTarget";
 import { createMachine, interpret } from "xstate";
-import { getOption, WARRIOR_RANGE_KEY } from "data";
+import {
+  getCurrentLevel,
+  getOption,
+  setCurrentLevel,
+  WARRIOR_RANGE_KEY,
+} from "data";
 import { Speech } from "game-objects/Speech";
 import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
@@ -134,12 +139,12 @@ export default class Game extends Phaser.Scene {
 
   create() {
     this.warriors = [];
-
+    const level = getCurrentLevel();
     const {
       levelData,
       warriors: warriorPositions,
       temple: templePos,
-    } = buildLevelFromImage(this.textures, "level_1");
+    } = buildLevelFromImage(this.textures, `level_${level}`);
 
     const TILE_SIDE = 32;
     const map = this.make.tilemap({
@@ -188,7 +193,15 @@ export default class Game extends Phaser.Scene {
       this.service.send({ type: "WIN" });
       const cam = this.cameras.main;
       cam.fade(1000, 24, 56, 153);
-      cam.once("camerafadeoutcomplete", () => this.scene.start(Scenes.END));
+      const level = getCurrentLevel();
+      if (level >= 3) {
+        cam.once("camerafadeoutcomplete", () => this.scene.start(Scenes.END));
+      } else {
+        setCurrentLevel(level + 1);
+        cam.once("camerafadeoutcomplete", () =>
+          this.scene.start(Scenes.LEVEL_COMPLETE)
+        );
+      }
     });
 
     const poseidon = new Poseidon(this, 480, 120);

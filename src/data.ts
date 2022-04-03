@@ -3,6 +3,7 @@ import localforage from "localforage";
 type GameData = {
   keys: Map<string, string | string[]>;
   options: Map<string, boolean | number | string>;
+  currentLevel: number;
 };
 
 const FORAGE_KEY = "ld-50-untitled-game";
@@ -19,10 +20,11 @@ const store: GameData = {
   options: new Map<string, boolean | number | string>([
     ["prayerRate", 5000],
     [BASE_SPAWN_RATE_KEY, 2200],
-    ["tutorialMode", true],
+    ["tutorialMode", false],
     [WARRIOR_RANGE_KEY, 140],
     [INVADER_SPEED_KEY, 1],
   ]),
+  currentLevel: 1,
 };
 
 async function saveGameData() {
@@ -63,6 +65,14 @@ function getStore() {
   return store;
 }
 
+function getCurrentLevel() {
+  return store.currentLevel;
+}
+
+function setCurrentLevel(level: number) {
+  store.currentLevel = level;
+}
+
 export {
   saveGameData,
   loadGameData,
@@ -71,6 +81,8 @@ export {
   setKey as setFlag,
   getOption,
   setOption,
+  getCurrentLevel,
+  setCurrentLevel,
   BASE_SPAWN_RATE_KEY,
   SFX_KEY,
   BG_MUSIC_KEY,

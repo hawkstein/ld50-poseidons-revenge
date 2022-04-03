@@ -11,7 +11,7 @@ export default class GameEnd extends Phaser.Scene {
       this.cameras.main.centerX,
       this.cameras.main.centerY,
       "Well done! You beat the game!",
-      { color: "#fff" }
+      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
     );
     congrats.x -= congrats.width / 2;
     congrats.y -= congrats.height / 2;
