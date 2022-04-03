@@ -165,7 +165,7 @@ export default class Game extends Phaser.Scene {
       throw new Error("No temple in level data");
     }
     const templeXY = this.layer.tileToWorldXY(templePos?.x, templePos.y);
-    this.temple = new Temple(this, 608, 286);
+    this.temple = new Temple(this, templeXY.x, templeXY.y);
     this.templeTiles = [
       templePos,
       new Phaser.Math.Vector2(templePos.x - 1, templePos.y),
