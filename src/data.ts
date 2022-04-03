@@ -11,6 +11,7 @@ const STORE_KEY = "data";
 const BASE_SPAWN_RATE_KEY = "invaderSpawnRate";
 const SFX_KEY = "sfx";
 const BG_MUSIC_KEY = "bgMusic";
+const WARRIOR_RANGE_KEY = "warriorRange";
 
 const store: GameData = {
   keys: new Map(),
@@ -18,6 +19,7 @@ const store: GameData = {
     ["prayerRate", 5000],
     [BASE_SPAWN_RATE_KEY, 2000],
     ["tutorialMode", true],
+    [WARRIOR_RANGE_KEY, 140],
   ]),
 };
 
@@ -70,4 +72,5 @@ export {
   BASE_SPAWN_RATE_KEY,
   SFX_KEY,
   BG_MUSIC_KEY,
+  WARRIOR_RANGE_KEY,
 };

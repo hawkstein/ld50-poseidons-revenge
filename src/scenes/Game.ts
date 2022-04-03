@@ -10,7 +10,7 @@ import selectFloodTarget, {
   selectNearbyTileToFlood,
 } from "game-objects/selectFloodTarget";
 import { createMachine, interpret } from "xstate";
-import { getOption } from "data";
+import { getOption, WARRIOR_RANGE_KEY } from "data";
 import { Speech } from "game-objects/Speech";
 import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
@@ -123,6 +123,8 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    this.warriors = [];
+
     const {
       levelData,
       warriors: warriorPositions,
@@ -442,12 +444,14 @@ export default class Game extends Phaser.Scene {
     arrow.setVisible(true);
     arrow.setActive(true);
     const rotation = Phaser.Math.Angle.Between(x, y, targetX, targetY);
+    const distance = Phaser.Math.Distance.Between(x, y, targetX, targetY);
+    const range = getOption(WARRIOR_RANGE_KEY) as number;
     arrow.rotation = rotation;
     this.tweens.add({
       targets: arrow,
       x: targetX,
       y: targetY,
-      duration: 500,
+      duration: (distance / range) * 500,
       onComplete: () => {
         this.arrows!.killAndHide(arrow);
         this.tweens.killTweensOf(arrow);

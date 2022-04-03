@@ -1,4 +1,5 @@
 import { HALF_SIDE } from "constants";
+import { getOption, WARRIOR_RANGE_KEY } from "data";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
 import { Invader } from "./Invader";
@@ -82,6 +83,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
   private moveToTarget?: Phaser.Math.Vector2;
   private nextEnemyScan: number = 0;
   private currentEnemy: Invader | null = null;
+  private range: number = getOption(WARRIOR_RANGE_KEY) as number;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "warrior");
@@ -195,7 +197,8 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       enemies.forEach((enemy) => {
         if (
           !enemyFound &&
-          Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y) < 200
+          Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y) <
+            this.range
         ) {
           this.service.send({ type: "ATTACK" });
           enemyFound = true;
