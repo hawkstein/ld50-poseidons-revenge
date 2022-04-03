@@ -4,7 +4,7 @@
       {
         "type": "image",
         "key": "title_v1",
-        "url": "assets/Title_v1.png"
+        "url": "assets/Title_v3.png"
       },
       {
         "type": "image",
@@ -32,9 +32,15 @@
         "url": "assets/Invader.png"
       },
       {
-        "type": "image",
+        "type": "spritesheet",
         "key": "temple",
-        "url": "assets/Temple.png"
+        "url": "assets/Temple.png",
+        "frameConfig": {
+          "frameWidth": 64,
+          "frameHeight": 40,
+          "startFrame": 0,
+          "endFrame": 9
+        }
       },
       {
         "type": "image",
@@ -55,6 +61,11 @@
         "type": "image",
         "key": "level_1",
         "url": "assets/Level_01.png"
+      },
+      {
+        "type": "audio",
+        "key": "drums_loop",
+        "url": "assets/DrumsOfWar.mp3"
       }
     ]
   }

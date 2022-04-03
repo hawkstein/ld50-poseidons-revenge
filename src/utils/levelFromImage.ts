@@ -16,7 +16,6 @@ export default function buildLevelFromImage(
       let tile = null;
       const pixel = tm.getPixel(row, column, key);
       const colour = pixel.rgba;
-      console.log(colour);
       switch (colour) {
         case "rgba(38,54,88,1)":
           tile = 0;

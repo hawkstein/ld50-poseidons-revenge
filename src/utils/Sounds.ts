@@ -1,11 +1,13 @@
 import Phaser from "phaser";
-import { getOption } from "data";
+import { getOption, SFX_KEY } from "data";
 
-const playSound = (sound: Phaser.Sound.BaseSound) => {
-  const sfx = getOption("sfx");
-  // console.log(sfx);
+const playSound = (
+  sound: Phaser.Sound.BaseSound,
+  config?: Phaser.Types.Sound.SoundConfig
+) => {
+  const sfx = getOption(SFX_KEY);
   if (sfx) {
-    sound.play();
+    sound.play(config);
   }
 };
 

@@ -9,6 +9,8 @@ const FORAGE_KEY = "ld-50-untitled-game";
 const STORE_KEY = "data";
 
 const BASE_SPAWN_RATE_KEY = "invaderSpawnRate";
+const SFX_KEY = "sfx";
+const BG_MUSIC_KEY = "bgMusic";
 
 const store: GameData = {
   keys: new Map(),
@@ -66,4 +68,6 @@ export {
   getOption,
   setOption,
   BASE_SPAWN_RATE_KEY,
+  SFX_KEY,
+  BG_MUSIC_KEY,
 };

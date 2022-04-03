@@ -98,6 +98,7 @@ export default class Game extends Phaser.Scene {
   private lossTime: number | null = null;
   private tutorialMode: boolean = true;
   private templeTiles: Phaser.Math.Vector2[] = [];
+  private bgMusic?: Phaser.Sound.BaseSound;
 
   constructor() {
     super(Scenes.GAME);
@@ -197,6 +198,9 @@ export default class Game extends Phaser.Scene {
   }
 
   startPlaying() {
+    this.bgMusic = this.sound.add("drums_loop");
+    // this.bgMusic.play({ loop: true, volume: 0.5 });
+
     this.warriors.forEach((warrior) => {
       warrior.on(Phaser.Input.Events.POINTER_UP, () => {
         warrior.select();
@@ -283,7 +287,7 @@ export default class Game extends Phaser.Scene {
       const secondWarrior = this.warriors[1];
       const warriorMove = new Speech(
         this,
-        secondWarrior.x - 16,
+        secondWarrior.x - 216,
         secondWarrior.y - 36,
         "Click elsewhere to move them",
         9200,

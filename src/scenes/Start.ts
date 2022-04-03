@@ -8,26 +8,26 @@ export default class Start extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(
+    const title = this.add.image(
       this.cameras.main.centerX,
-      this.cameras.main.centerY - 200,
+      this.cameras.main.centerY - 170,
       "title_v1"
     );
 
-    const title = this.add.text(
+    const headline = this.add.text(
       this.cameras.main.centerX,
       this.cameras.main.centerY + 50,
-      "Ludum Dare 50",
-      { color: "#fff", fontSize: "36px" }
+      "Built for Ludum Dare Fifty",
+      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
     );
-    title.x -= title.width / 2;
-    title.y -= title.height / 2;
+    headline.x -= headline.width / 2;
+    headline.y -= headline.height / 2;
 
     const subtitle = this.add.text(
       this.cameras.main.centerX,
       this.cameras.main.centerY + 110,
-      "Start Menu",
-      { color: "#fff", fontSize: "36px" }
+      "Theme: Delay the inevitable",
+      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
     );
     subtitle.x -= subtitle.width / 2;
     subtitle.y -= subtitle.height / 2;
