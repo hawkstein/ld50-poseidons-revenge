@@ -107,12 +107,21 @@ export default class Game extends Phaser.Scene {
   init() {
     const gameMachine = buildMachine(this.events);
     this.service = interpret(gameMachine);
-    this.service.start();
-    this.events.once("START_PLAYING", () => {
+
+    this.bgMusic = this.sound.add("drums_loop");
+
+    this.events.on("START_PLAYING", () => {
       this.startPlaying();
     });
+
+    this.events.on(Phaser.Scenes.Events.CREATE, () => {
+      this.service.start();
+      this.bgMusic?.play({ loop: true, volume: 0.5 });
+    });
+
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.service.stop();
+      this.bgMusic?.stop();
     });
 
     this.tutorialMode = getOption("tutorialMode") as boolean;
@@ -200,9 +209,6 @@ export default class Game extends Phaser.Scene {
   }
 
   startPlaying() {
-    this.bgMusic = this.sound.add("drums_loop");
-    // this.bgMusic.play({ loop: true, volume: 0.5 });
-
     this.warriors.forEach((warrior) => {
       warrior.on(Phaser.Input.Events.POINTER_UP, () => {
         warrior.select();
@@ -347,9 +353,6 @@ export default class Game extends Phaser.Scene {
       );
       this.add.existing(archery);
     }
-
-    // Sea-people! Sink this offensive island!
-    // Your warriors will automatically shoot at enemies when close
 
     // Move pause code to the HUD
     // this.input.keyboard.on("keyup-P", () => {
