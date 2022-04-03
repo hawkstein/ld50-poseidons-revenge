@@ -10,9 +10,10 @@ const STORE_KEY = "data";
 
 const store: GameData = {
   keys: new Map(),
-  options: new Map([
+  options: new Map<string, boolean | number | string>([
     ["prayerRate", 5000],
     ["invaderSpawnRate", 3000],
+    ["tutorialMode", true],
   ]),
 };
 
@@ -42,8 +43,8 @@ function setKey(key: string, value: string | string[]) {
   store.keys.set(key, value);
 }
 
-function getOption<T>(key: string) {
-  return store.options.get(key) as unknown as T;
+function getOption(key: string) {
+  return store.options.get(key);
 }
 
 function setOption(key: string, value: boolean | number | string) {

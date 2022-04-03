@@ -9,7 +9,7 @@ export class Temple extends Phaser.GameObjects.Sprite {
   }
 
   startPraying() {
-    const prayerRate = getOption<number>("prayerRate");
+    const prayerRate = getOption("prayerRate") as number;
     if (!this.updateEvent) {
       this.updateEvent = this.scene.time.addEvent({
         delay: prayerRate,

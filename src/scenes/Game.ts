@@ -12,6 +12,15 @@ import selectFloodTarget, {
 } from "game-objects/selectFloodTarget";
 import { createMachine, interpret } from "xstate";
 import { getOption } from "data";
+import { Speech } from "game-objects/Speech";
+
+type InvaderSpawnZone = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  initialSwimDirection: "left" | "right" | "up";
+};
 
 type GameContext = {
   emitter: Phaser.Events.EventEmitter;
@@ -83,6 +92,7 @@ export default class Game extends Phaser.Scene {
   private invaders: Invader[] = [];
   private temple!: Temple;
   private lossTime: number | null = null;
+  private tutorialMode: boolean = true;
 
   constructor() {
     super(Scenes.GAME);
@@ -98,6 +108,8 @@ export default class Game extends Phaser.Scene {
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.service.stop();
     });
+
+    this.tutorialMode = getOption("tutorialMode") as boolean;
   }
 
   create() {
@@ -158,7 +170,18 @@ export default class Game extends Phaser.Scene {
     this.add.existing(poseidon);
     poseidon.intro();
 
-    // Add listeners for pause keys
+    const threat = new Speech(
+      this,
+      50,
+      50,
+      "Face the wrath of Poseidon!",
+      2000,
+      3000
+    );
+    this.add.existing(threat);
+
+    const cam = this.cameras.main;
+    cam.fadeIn(1600, 24, 56, 153);
   }
 
   startPlaying() {
@@ -167,18 +190,6 @@ export default class Game extends Phaser.Scene {
         warrior.select();
         this.selectedWarrior = warrior;
       });
-    });
-
-    // TODO: spawnSpring should search for land tiles
-    this.time.addEvent({
-      delay: 20000,
-      loop: true,
-      callback: () => {
-        this.spawnSpring(
-          Phaser.Math.Between(8, 22),
-          Phaser.Math.Between(7, 16)
-        );
-      },
     });
 
     this.input.on(
@@ -199,16 +210,108 @@ export default class Game extends Phaser.Scene {
       }
     );
 
-    const invaderSpawnRate = getOption<number>("invaderSpawnRate");
+    // if tutorial mode
     this.time.addEvent({
-      delay: invaderSpawnRate,
-      loop: true,
+      delay: this.tutorialMode ? 20000 : 0,
       callback: () => {
-        this.spawnInvader();
+        // TODO: spawnSpring should search for land tiles
+        this.time.addEvent({
+          delay: 20000,
+          loop: true,
+          callback: () => {
+            this.spawnSpring(
+              Phaser.Math.Between(8, 22),
+              Phaser.Math.Between(7, 16)
+            );
+          },
+        });
+        this.temple.startPraying();
+        const invaderSpawnRate = getOption("invaderSpawnRate") as number;
+        this.time.addEvent({
+          delay: invaderSpawnRate,
+          loop: true,
+          callback: () => {
+            this.spawnInvader();
+          },
+        });
       },
     });
 
-    this.temple.startPraying();
+    if (this.tutorialMode) {
+      const firstWarrior = this.warriors[0];
+      const warriorClick = new Speech(
+        this,
+        firstWarrior.x - 16,
+        firstWarrior.y - 36,
+        "Click to select a warrior",
+        6000,
+        3200
+      );
+      this.add.existing(warriorClick);
+      const secondWarrior = this.warriors[1];
+      const warriorMove = new Speech(
+        this,
+        secondWarrior.x - 16,
+        secondWarrior.y - 36,
+        "Click elsewhere to move them",
+        9200,
+        3200
+      );
+      this.add.existing(warriorMove);
+      const templeInfo = new Speech(
+        this,
+        this.temple.x - 260,
+        this.temple.y - 64,
+        "Islanders in the temple are praying to Athena",
+        12400,
+        4000
+      );
+      this.add.existing(templeInfo);
+      const templeBoat = new Speech(
+        this,
+        this.temple.x - 280,
+        this.temple.y - 64,
+        "In time she will grant a boat safe passage",
+        16400,
+        7000
+      );
+      this.add.existing(templeBoat);
+      const templeEnd = new Speech(
+        this,
+        this.temple.x - 160,
+        this.temple.y - 64,
+        "Hold out until then!",
+        23400,
+        2000
+      );
+      this.add.existing(templeEnd);
+    }
+
+    const seaPeople = new Speech(
+      this,
+      250,
+      50,
+      "Sea-people! Sink this offensive island!",
+      this.tutorialMode ? 25400 : 6000,
+      2000
+    );
+    this.add.existing(seaPeople);
+
+    if (this.tutorialMode) {
+      const firstWarrior = this.warriors[0];
+      const archery = new Speech(
+        this,
+        firstWarrior.x - 16,
+        firstWarrior.y - 36,
+        "Your warriors will shoot at enemies when close",
+        27000,
+        3000
+      );
+      this.add.existing(archery);
+    }
+
+    // Sea-people! Sink this offensive island!
+    // Your warriors will automatically shoot at enemies when close
 
     // Move pause code to the HUD
     // this.input.keyboard.on("keyup-P", () => {
@@ -226,14 +329,6 @@ export default class Game extends Phaser.Scene {
     if (this.service.state.value.gameplay !== "playing") {
       return;
     }
-
-    type InvaderSpawnZone = {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-      initialSwimDirection: "left" | "right" | "up";
-    };
 
     const invaderSpawnZones: InvaderSpawnZone[] = [
       { x: 0, y: 6, width: 1, height: 11, initialSwimDirection: "right" },

@@ -12,7 +12,8 @@ export class Poseidon extends Phaser.GameObjects.Sprite {
       targets: this,
       y: this.y - 20,
       alpha: 1,
-      duration: 2000,
+      delay: 800,
+      duration: 2200,
     });
   }
 }
