@@ -3,11 +3,22 @@ import Scenes from "@scenes";
 import StartMenu from "@components/StartMenu";
 
 export default class Start extends Phaser.Scene {
+  private tridents?: Phaser.GameObjects.TileSprite;
+
   constructor() {
     super(Scenes.START);
   }
 
   create() {
+    this.tridents = this.add.tileSprite(
+      0,
+      0,
+      this.cameras.main.width,
+      this.cameras.main.height,
+      "tridents"
+    );
+    this.tridents.scale = 2;
+
     const title = this.add.image(
       this.cameras.main.centerX,
       this.cameras.main.centerY - 170,
@@ -38,5 +49,12 @@ export default class Start extends Phaser.Scene {
       this.cameras.main.centerY + 180
     );
     menu.build();
+  }
+
+  update(): void {
+    if (this.tridents) {
+      this.tridents.tilePositionX = this.tridents.tilePositionX + 0.5;
+      this.tridents.tilePositionY = this.tridents.tilePositionY + 0.5;
+    }
   }
 }

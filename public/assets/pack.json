@@ -8,6 +8,11 @@
       },
       {
         "type": "image",
+        "key": "tridents",
+        "url": "assets/Tridents.png"
+      },
+      {
+        "type": "image",
         "key": "arrow",
         "url": "assets/Arrow.png"
       },
