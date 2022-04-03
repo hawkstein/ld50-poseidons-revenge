@@ -197,7 +197,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
           !enemyFound &&
           Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y) < 200
         ) {
-          // this.service.send({ type: "ATTACK" });
+          this.service.send({ type: "ATTACK" });
           enemyFound = true;
           this.currentEnemy = enemy;
         }

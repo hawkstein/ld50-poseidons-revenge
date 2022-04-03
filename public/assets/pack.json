@@ -50,6 +50,11 @@
         "type": "image",
         "key": "water",
         "url": "assets/WaterParticle.png"
+      },
+      {
+        "type": "image",
+        "key": "level_1",
+        "url": "assets/Level_01.png"
       }
     ]
   }

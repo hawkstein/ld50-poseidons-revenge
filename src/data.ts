@@ -15,7 +15,7 @@ const store: GameData = {
   options: new Map<string, boolean | number | string>([
     ["prayerRate", 5000],
     [BASE_SPAWN_RATE_KEY, 2000],
-    ["tutorialMode", false],
+    ["tutorialMode", true],
   ]),
 };
 

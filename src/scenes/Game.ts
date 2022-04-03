@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import Scenes from "@scenes";
-import levelData from "./levelData";
 import { LEAP_TO_SAFETY, Warrior } from "game-objects/Warrior";
 import findPath from "game-objects/findPath";
 import { Invader, INVADER_FLOOD } from "game-objects/Invader";
@@ -14,6 +13,7 @@ import { createMachine, interpret } from "xstate";
 import { getOption } from "data";
 import { Speech } from "game-objects/Speech";
 import checkNeighbours from "game-objects/checkNeighbours";
+import buildLevelFromImage from "@utils/levelFromImage";
 
 type InvaderSpawnZone = {
   x: number;
@@ -122,12 +122,15 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    // Create level data from JSON / image
-    // Create TileMap from level data
+    const {
+      levelData,
+      warriors: warriorPositions,
+      temple: templePos,
+    } = buildLevelFromImage(this.textures, "level_1");
 
     const TILE_SIDE = 32;
     const map = this.make.tilemap({
-      data: levelData,
+      data: levelData as number[][],
       tileWidth: TILE_SIDE,
       tileHeight: TILE_SIDE,
       width: 32,
@@ -147,14 +150,7 @@ export default class Game extends Phaser.Scene {
     this.selectionRect.visible = false;
     this.selectionRect.setOrigin(0);
 
-    // Get warrior positions from level data
-    const warriorPositions = [
-      [10, 8],
-      [14, 15],
-      [20, 12],
-    ];
-
-    warriorPositions.forEach(([x, y]) => {
+    warriorPositions.forEach(({ x, y }) => {
       const warrior = new Warrior(
         this,
         this.layer.tileToWorldY(x),
@@ -165,15 +161,14 @@ export default class Game extends Phaser.Scene {
       this.warriors.push(warrior);
     });
 
-    // TODO: get temple position from level data
+    if (!templePos) {
+      throw new Error("No temple in level data");
+    }
+    const templeXY = this.layer.tileToWorldXY(templePos?.x, templePos.y);
     this.temple = new Temple(this, 608, 286);
-    const templeSpace = this.layer.worldToTileXY(
-      this.temple.x,
-      this.temple.y + TILE_SIDE
-    );
     this.templeTiles = [
-      templeSpace,
-      new Phaser.Math.Vector2(templeSpace.x - 1, templeSpace.y),
+      templePos,
+      new Phaser.Math.Vector2(templePos.x - 1, templePos.y),
     ];
     this.add.existing(this.temple);
     this.temple.on("WIN", () => {

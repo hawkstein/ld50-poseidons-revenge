@@ -33,11 +33,7 @@ const selectFloodTarget = (
     tileX += xAdjust;
     tileY += yAdjust;
     const tile = tileMapLayer.getTileAt(tileX, tileY);
-    if (!tile) {
-      console.log("TILE WAS NULL");
-      return { targetX: 0, targetY: 0 };
-    }
-    if (tile.index > 0) {
+    if (tile && tile.index > 0) {
       targetFound = true;
       const { x, y } = tileMapLayer.tileToWorldXY(tileX, tileY);
       return { targetX: x, targetY: y };
