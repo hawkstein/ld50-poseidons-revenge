@@ -262,6 +262,7 @@ export default class Game extends Phaser.Scene {
         }
       );
       warrior.on(LEAP_TO_SAFETY, () => {
+        console.log(warrior);
         const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
         const safety = checkNeighbours(warriorPos, WATER_LEVEL, this.layer);
         if (warriorPos.equals(safety)) {
@@ -449,7 +450,8 @@ export default class Game extends Phaser.Scene {
         this.layer.putTileAt(1, invaderPos.x, invaderPos.y);
         this.warriors.forEach((warrior) => {
           const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
-          if (warriorPos.equals(invaderPos) && warrior) {
+          if (warriorPos.equals(invaderPos)) {
+            console.log({ warriorPos, invaderPos });
             warrior.handleFlooding();
           }
         });

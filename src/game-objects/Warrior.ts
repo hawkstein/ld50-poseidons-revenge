@@ -42,17 +42,20 @@ const warriorMachine = createMachine({
           on: {
             MOVE: "moving",
             FINISHED_ATTACKING: "idle",
+            SUNK: "escaping",
           },
         },
         moving: {
           on: {
             FINISHED_MOVING: "idle",
             FLEE: "fled",
+            SUNK: "escaping",
           },
         },
         shoring: {
           on: {
             FINISHED_SHORING: "idle",
+            SUNK: "escaping",
           },
         },
         escaping: {
@@ -222,17 +225,6 @@ export class Warrior extends Phaser.GameObjects.Sprite {
           this.currentEnemy = enemy;
         }
       });
-      // console.log(
-      //   `Distance to target: ${Phaser.Math.Distance.Between(
-      //     this.x,
-      //     this.y,
-      //     200,
-      //     270
-      //   )}`
-      // );
-      // if (Phaser.Math.Distance.Between(this.x, this.y, 200, 270) < 100) {
-      //   this.service.send({ type: "ATTACK" });
-      // }
     }
 
     if (
