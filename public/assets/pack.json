@@ -27,9 +27,15 @@
         "url": "assets/tileset.png"
       },
       {
-        "type": "image",
+        "type": "spritesheet",
         "key": "warrior",
-        "url": "assets/WarriorV2.png"
+        "url": "assets/WarriorV2.png",
+        "frameConfig": {
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "startFrame": 0,
+          "endFrame": 5
+        }
       },
       {
         "type": "image",

@@ -23,6 +23,7 @@ import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
 import getThreat from "@utils/getThreat";
 import getLevelConfig from "@utils/getLevelConfig";
+import { WATER_LEVEL } from "constants";
 
 type InvaderSpawnZone = {
   x: number;
@@ -246,7 +247,7 @@ export default class Game extends Phaser.Scene {
       );
       warrior.on(LEAP_TO_SAFETY, () => {
         const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
-        const safety = checkNeighbours(warriorPos, 1, this.layer);
+        const safety = checkNeighbours(warriorPos, WATER_LEVEL, this.layer);
         if (warriorPos.equals(safety)) {
           warrior.drown();
         } else {
@@ -418,7 +419,7 @@ export default class Game extends Phaser.Scene {
     invader.moveTo(new Phaser.Math.Vector2(targetX, targetY));
     invader.on(INVADER_FLOOD, () => {
       const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
-      this.layer.putTileAt(0, invaderPos.x, invaderPos.y);
+      this.layer.putTileAt(1, invaderPos.x, invaderPos.y);
       this.warriors.forEach((warrior) => {
         const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
         if (warriorPos.equals(invaderPos) && warrior) {
@@ -428,7 +429,7 @@ export default class Game extends Phaser.Scene {
       if (
         this.templeTiles.every((tilePos) => {
           const tile = this.layer.getTileAt(tilePos.x, tilePos.y);
-          return tile.index <= 0;
+          return tile.index < WATER_LEVEL;
         })
       ) {
         this.handleLevelFailure();
@@ -453,7 +454,9 @@ export default class Game extends Phaser.Scene {
     const spring = new Spring(this, x, y - 12);
     this.add.existing(spring);
     const floodTile = (xAt: number, yAt: number) => {
-      this.layer.putTileAt(0, xAt, yAt);
+      const tile = this.layer.getTileAt(xAt, yAt);
+      const floodIndex = tile.index >= 1 ? 1 : 0;
+      this.layer.putTileAt(floodIndex, xAt, yAt);
     };
     this.time.addEvent({
       delay: 1200,
@@ -506,7 +509,7 @@ export default class Game extends Phaser.Scene {
       !this.lossTime &&
       this.warriors.every((warrior) => warrior.isDead()) // TODO: change to a check whenever a warrior dies.
     ) {
-      this.lossTime = time + 1200; // Should this slight advantage be in the options?
+      this.lossTime = time + 1200;
     }
   }
 

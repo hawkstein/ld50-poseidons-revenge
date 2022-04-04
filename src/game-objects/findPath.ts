@@ -1,3 +1,4 @@
+import { WATER_LEVEL } from "constants";
 import Phaser from "phaser";
 
 type TilePosition = {
@@ -59,7 +60,7 @@ const findPath = (
         continue;
       }
 
-      if (tile.index <= 0) {
+      if (tile.index < WATER_LEVEL) {
         continue;
       }
 

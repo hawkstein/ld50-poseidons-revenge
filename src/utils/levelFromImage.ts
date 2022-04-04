@@ -5,7 +5,6 @@ export default function buildLevelFromImage(
   key: string
 ) {
   const frame = tm.getFrame(key);
-
   const levelData: TileData[][] = Array.from({ length: frame.height }).map(() =>
     Array.from({ length: frame.height })
   );
@@ -17,19 +16,19 @@ export default function buildLevelFromImage(
       const pixel = tm.getPixel(row, column, key);
       const colour = pixel.rgba;
       switch (colour) {
-        case "rgba(38,54,88,1)":
-          tile = 0;
-          break;
         case "rgba(191,102,94,1)":
-          tile = 1;
+          tile = 2;
           break;
         case "rgba(153,229,80,1)":
-          tile = 1;
+          tile = 2;
           warriors.push(new Phaser.Math.Vector2(row, column));
           break;
         case "rgba(251,242,54,1)":
-          tile = 1;
+          tile = 2;
           temple = new Phaser.Math.Vector2(row, column);
+          break;
+        default:
+          tile = 0;
           break;
       }
       levelData[column][row] = tile;

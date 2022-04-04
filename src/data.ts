@@ -8,6 +8,8 @@ type GameData = {
 
 const FORAGE_KEY = "ld-50-untitled-game";
 const STORE_KEY = "data";
+const KEYS_KEY = "keys";
+const OPTIONS_KEY = "options";
 
 const BASE_SPAWN_RATE_KEY = "invaderSpawnRate";
 const SFX_KEY = "sfx";
@@ -15,11 +17,12 @@ const BG_MUSIC_KEY = "bgMusic";
 const WARRIOR_RANGE_KEY = "warriorRange";
 const INVADER_SPEED_KEY = "invaderSpeed";
 const TUTORIAL_MODE_KEY = "tutorialMode";
+const PRAYER_RATE_KEY = "prayerRate";
 
 const store: GameData = {
   keys: new Map(),
   options: new Map<string, boolean | number | string>([
-    ["prayerRate", 2000],
+    [PRAYER_RATE_KEY, 2000],
     [BASE_SPAWN_RATE_KEY, 2200],
     [TUTORIAL_MODE_KEY, true],
     [WARRIOR_RANGE_KEY, 140],
@@ -33,8 +36,8 @@ async function saveGameData() {
     name: FORAGE_KEY,
     storeName: STORE_KEY,
   });
-  await localforage.setItem("keys", store.keys);
-  await localforage.setItem("options", store.options);
+  await localforage.setItem(KEYS_KEY, store.keys);
+  await localforage.setItem(OPTIONS_KEY, store.options);
 }
 
 async function loadGameData() {
@@ -42,8 +45,8 @@ async function loadGameData() {
     name: FORAGE_KEY,
     storeName: STORE_KEY,
   });
-  store.keys = (await localforage.getItem("keys")) ?? store.keys;
-  store.options = (await localforage.getItem("options")) ?? store.options;
+  store.keys = (await localforage.getItem(KEYS_KEY)) ?? store.keys;
+  store.options = (await localforage.getItem(OPTIONS_KEY)) ?? store.options;
 }
 
 function getKey(key: string) {
@@ -90,4 +93,5 @@ export {
   WARRIOR_RANGE_KEY,
   INVADER_SPEED_KEY,
   TUTORIAL_MODE_KEY,
+  PRAYER_RATE_KEY,
 };

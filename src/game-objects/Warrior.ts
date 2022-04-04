@@ -86,7 +86,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
   private range: number = getOption(WARRIOR_RANGE_KEY) as number;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "warrior");
+    super(scene, x, y, "warrior", 0);
     this.service = interpret(warriorMachine).onTransition((state: any) => {
       if (state.value.activity === "escaping") {
         this.emit(LEAP_TO_SAFETY);
@@ -95,6 +95,19 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     this.setInteractive();
     this.service.start();
     this.setOrigin(0);
+    const anims = scene.anims;
+    anims.create({
+      key: "idle",
+      frames: this.anims.generateFrameNumbers("warrior", { start: 0, end: 0 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+    anims.create({
+      key: "walk_down",
+      frames: this.anims.generateFrameNumbers("warrior", { start: 1, end: 4 }),
+      frameRate: 6,
+      repeat: -1,
+    });
   }
 
   moveAlong(path: Phaser.Math.Vector2[]) {
@@ -172,7 +185,7 @@ export class Warrior extends Phaser.GameObjects.Sprite {
     const upDown = dy < 0;
     const downDown = dy > 0;
 
-    const speed = 2;
+    const speed = 3;
 
     if (leftDown) {
       this.x -= speed;
@@ -184,8 +197,12 @@ export class Warrior extends Phaser.GameObjects.Sprite {
       this.flipX = false;
     } else if (upDown) {
       this.y -= speed;
+      this.anims.play("walk_down", true);
     } else if (downDown) {
       this.y += speed;
+      this.anims.play("walk_down", true);
+    } else {
+      this.anims.play("idle", true);
     }
 
     if (

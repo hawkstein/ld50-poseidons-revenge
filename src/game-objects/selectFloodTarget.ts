@@ -1,3 +1,4 @@
+import { WATER_LEVEL } from "constants";
 import Phaser from "phaser";
 
 const selectFloodTarget = (
@@ -33,7 +34,7 @@ const selectFloodTarget = (
     tileX += xAdjust;
     tileY += yAdjust;
     const tile = tileMapLayer.getTileAt(tileX, tileY);
-    if (tile && tile.index > 0) {
+    if (tile && tile.index >= WATER_LEVEL) {
       targetFound = true;
       const { x, y } = tileMapLayer.tileToWorldXY(tileX, tileY);
       return { targetX: x, targetY: y };
