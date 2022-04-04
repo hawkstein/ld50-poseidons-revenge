@@ -116,6 +116,7 @@ export default class Game extends Phaser.Scene {
   private tutorialMode: boolean = true;
   private templeTiles: Phaser.Math.Vector2[] = [];
   private bgMusic?: Phaser.Sound.BaseSound;
+  private poseidon!: Poseidon;
 
   constructor() {
     super(Scenes.GAME);
@@ -149,7 +150,7 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    for (let index = 0; index < 60; index++) {
+    for (let index = 0; index < 20; index++) {
       const element = new Water(this);
       this.add.existing(element);
     }
@@ -221,18 +222,19 @@ export default class Game extends Phaser.Scene {
     });
     const halfwayAcross = Math.floor(GAME_WIDTH_TILES / 2) * 32;
     const aLittleDown = TILE_HEIGHT * 3;
-    const poseidon = new Poseidon(this, halfwayAcross, aLittleDown);
-    this.add.existing(poseidon);
-    poseidon.intro();
+    this.poseidon = new Poseidon(this, halfwayAcross, aLittleDown);
+    this.add.existing(this.poseidon);
+    this.poseidon.intro();
 
     const threat = new Speech(
       this,
-      50,
-      50,
+      this.poseidon.x,
+      this.poseidon.y + this.poseidon.height / 2 + TILE_HEIGHT / 2,
       "Face the wrath of Poseidon!",
       2000,
       3000
     );
+    threat.x -= threat.width / 2;
     this.add.existing(threat);
 
     const cam = this.cameras.main;
@@ -406,9 +408,8 @@ export default class Game extends Phaser.Scene {
     }
 
     const invaderSpawnZones: InvaderSpawnZone[] = [
-      { x: 0, y: 6, width: 1, height: 11, initialSwimDirection: "right" },
-      { x: 7, y: 22, width: 15, height: 2, initialSwimDirection: "up" },
-      { x: 28, y: 6, width: 2, height: 11, initialSwimDirection: "left" },
+      { x: 0, y: 4, width: 1, height: 8, initialSwimDirection: "right" },
+      { x: 24, y: 4, width: 1, height: 8, initialSwimDirection: "left" },
     ];
     const zone = Phaser.Utils.Array.GetRandom(invaderSpawnZones);
     const rand = Phaser.Math.Between;
@@ -459,7 +460,16 @@ export default class Game extends Phaser.Scene {
       return;
     }
 
-    const threat = new Speech(this, 50, 50, getThreat(), 0, 1800);
+    const threat = new Speech(
+      this,
+      this.poseidon.x,
+      this.poseidon.y + this.poseidon.height / 2 + TILE_HEIGHT / 2,
+      getThreat(),
+      0,
+      1800
+    );
+    threat.x -= threat.width / 2;
+
     this.add.existing(threat);
 
     const { x, y } = this.layer.tileToWorldXY(xTile, yTile);

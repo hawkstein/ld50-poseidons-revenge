@@ -27,7 +27,7 @@ export class Speech extends Phaser.GameObjects.Container {
     background.fillRect(0, 0, text.width + 6, text.height);
     background.strokeRect(0, 0, text.width + 6, text.height);
     this.add([background, text]);
-    // this.setSize(text.width, text.height);
+    this.setSize(text.width + 6, text.height);
 
     this.alpha = 0;
     this.scene.tweens.add({

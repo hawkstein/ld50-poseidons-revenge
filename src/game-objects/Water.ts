@@ -26,6 +26,7 @@ export class Water extends Phaser.GameObjects.Sprite {
     this.anims.play({ key: "default", startFrame: Phaser.Math.Between(0, 4) });
 
     this.setMoveTimer();
+    this.scale = 2;
   }
 
   randomSpot() {
