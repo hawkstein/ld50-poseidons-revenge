@@ -321,60 +321,66 @@ export default class Game extends Phaser.Scene {
       const firstWarrior = this.warriors[0];
       const warriorClick = new Speech(
         this,
-        firstWarrior.x - 16,
-        firstWarrior.y - 36,
+        firstWarrior.x,
+        firstWarrior.y - TILE_HEIGHT * 2,
         "Click to select a warrior",
         6000,
         3200
       );
+      warriorClick.x -= warriorClick.width / 2;
       this.add.existing(warriorClick);
 
       const warriorMove = new Speech(
         this,
-        firstWarrior.x - 216,
+        firstWarrior.x,
         firstWarrior.y - 36,
         "Click elsewhere to move them",
         9200,
         3200
       );
+      warriorMove.x -= warriorMove.width / 2;
       this.add.existing(warriorMove);
       const templeInfo = new Speech(
         this,
-        this.temple.x - 260,
-        this.temple.y - 64,
-        "Islanders in the temple are praying to Athena",
+        this.temple.x,
+        this.temple.y - TILE_HEIGHT * 2,
+        "The temple prays to Athena",
         12400,
         4000
       );
+      templeInfo.x -= templeInfo.width / 2;
       this.add.existing(templeInfo);
       const templeBoat = new Speech(
         this,
-        this.temple.x - 280,
-        this.temple.y - 64,
-        "In time she will grant a boat safe passage",
+        this.temple.x,
+        this.temple.y - TILE_HEIGHT * 2,
+        "Soon she will grant a boat safe passage",
         16400,
         7000
       );
+      templeBoat.x -= templeBoat.width / 2;
       this.add.existing(templeBoat);
       const templeEnd = new Speech(
         this,
-        this.temple.x - 160,
-        this.temple.y - 64,
-        "Hold out until then!",
+        this.temple.x,
+        this.temple.y - TILE_HEIGHT * 2,
+        "Keep the temple safe until then!",
         23400,
         2000
       );
+      templeEnd.x -= templeEnd.width / 2;
       this.add.existing(templeEnd);
     }
 
     const seaPeople = new Speech(
       this,
-      250,
-      50,
-      "Sea-beasts! Sink this offensive island!",
+      this.poseidon.x,
+      this.poseidon.y + this.poseidon.height / 2 + TILE_HEIGHT / 2,
+      "Beasts of the sea! Sink those who offend me!",
       this.tutorialMode ? 25400 : 6000,
       2000
     );
+    seaPeople.x -= seaPeople.width / 2;
     this.add.existing(seaPeople);
 
     if (this.tutorialMode) {
@@ -383,10 +389,11 @@ export default class Game extends Phaser.Scene {
         this,
         firstWarrior.x - 16,
         firstWarrior.y - 36,
-        "Your warriors will shoot at enemies when close",
+        "Warriors shoot at nearby enemies",
         27000,
         3000
       );
+      archery.x -= archery.width / 2;
       this.add.existing(archery);
     }
 
