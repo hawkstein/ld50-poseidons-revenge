@@ -24,7 +24,6 @@ export class Water extends Phaser.GameObjects.Sprite {
       repeat: -1,
     });
     this.anims.play({ key: "default", startFrame: Phaser.Math.Between(0, 4) });
-
     this.setMoveTimer();
     this.scale = 2;
   }
@@ -47,10 +46,12 @@ export class Water extends Phaser.GameObjects.Sprite {
 
   setMoveTimer() {
     this.scene.time.delayedCall(3000 + Phaser.Math.Between(0, 3000), () => {
-      const newSpot = this.randomSpot();
-      this.x = newSpot.x;
-      this.y = newSpot.y;
-      this.setMoveTimer();
+      if (this.active) {
+        const newSpot = this.randomSpot();
+        this.x = newSpot.x;
+        this.y = newSpot.y;
+        this.setMoveTimer();
+      }
     });
   }
 }

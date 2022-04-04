@@ -123,12 +123,17 @@ export default class Game extends Phaser.Scene {
   }
 
   init() {
+    this.tutorialMode = getOption("tutorialMode") as boolean;
+    this.warriors = [];
+
+    if (!this.bgMusic) {
+      this.bgMusic = this.sound.add("drums_loop");
+    }
+
     const gameMachine = buildMachine(this.events);
     this.service = interpret(gameMachine);
 
-    this.bgMusic = this.sound.add("drums_loop");
-
-    this.events.on("START_PLAYING", () => {
+    this.events.once("START_PLAYING", () => {
       this.startPlaying();
     });
 
@@ -142,8 +147,6 @@ export default class Game extends Phaser.Scene {
       this.bgMusic?.stop();
     });
 
-    this.tutorialMode = getOption("tutorialMode") as boolean;
-
     this.arrows = this.add.group({
       defaultKey: ARROW_KEY,
     });
@@ -155,7 +158,6 @@ export default class Game extends Phaser.Scene {
       this.add.existing(element);
     }
 
-    this.warriors = [];
     const level = getCurrentLevel();
     const {
       levelData,
@@ -294,15 +296,11 @@ export default class Game extends Phaser.Scene {
     this.time.addEvent({
       delay: this.tutorialMode ? 20000 : 0,
       callback: () => {
-        // TODO: spawnSpring should search for land tiles
         this.time.addEvent({
           delay: 20000 - springSpawnRate,
           loop: true,
           callback: () => {
-            this.spawnSpring(
-              Phaser.Math.Between(8, 22),
-              Phaser.Math.Between(7, 16)
-            );
+            this.spawnSpring();
           },
         });
         this.temple.startPraying();
@@ -415,57 +413,74 @@ export default class Game extends Phaser.Scene {
     }
 
     const invaderSpawnZones: InvaderSpawnZone[] = [
-      { x: 0, y: 4, width: 1, height: 8, initialSwimDirection: "right" },
-      { x: 24, y: 4, width: 1, height: 8, initialSwimDirection: "left" },
+      { x: 0, y: 6, width: 1, height: 7, initialSwimDirection: "right" },
+      {
+        x: GAME_WIDTH_TILES - 1,
+        y: 6,
+        width: 1,
+        height: 7,
+        initialSwimDirection: "left",
+      },
     ];
     const zone = Phaser.Utils.Array.GetRandom(invaderSpawnZones);
     const rand = Phaser.Math.Between;
     const tileX = rand(zone.x, zone.x + zone.width);
     const tileY = rand(zone.y, zone.y + zone.height);
     const { x, y } = this.layer.tileToWorldXY(tileX, tileY);
-    const invader = new Invader(this, x, y);
-    this.invaders.push(invader);
-    invader.on(Phaser.GameObjects.Events.DESTROY, () => {
-      this.invaders = this.invaders.filter(
-        (otherInvader) => otherInvader !== invader
-      );
-    });
-    this.add.existing(invader);
-    const { targetX, targetY } = selectFloodTarget(
+
+    const target = selectFloodTarget(
       { x: tileX, y: tileY },
       zone.initialSwimDirection,
       this.layer
     );
-    invader.moveTo(new Phaser.Math.Vector2(targetX, targetY));
-    invader.on(INVADER_FLOOD, () => {
-      const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
-      this.layer.putTileAt(1, invaderPos.x, invaderPos.y);
-      this.warriors.forEach((warrior) => {
-        const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
-        if (warriorPos.equals(invaderPos) && warrior) {
-          warrior.handleFlooding();
-        }
+    if (target) {
+      const invader = new Invader(this, x, y);
+      this.invaders.push(invader);
+      invader.on(Phaser.GameObjects.Events.DESTROY, () => {
+        this.invaders = this.invaders.filter(
+          (otherInvader) => otherInvader !== invader
+        );
       });
-      if (
-        this.templeTiles.every((tilePos) => {
-          const tile = this.layer.getTileAt(tilePos.x, tilePos.y);
-          return tile.index < WATER_LEVEL;
-        })
-      ) {
-        this.handleLevelFailure();
-      }
-      const newTile = selectNearbyTileToFlood(
-        { x: invaderPos.x, y: invaderPos.y },
-        this.layer
-      );
-      invader.moveTo(this.layer.tileToWorldXY(newTile.x, newTile.y));
-    });
+      this.add.existing(invader);
+      const { targetX, targetY } = target;
+      invader.moveTo(new Phaser.Math.Vector2(targetX, targetY));
+      invader.on(INVADER_FLOOD, () => {
+        const invaderPos = this.layer.worldToTileXY(invader.x, invader.y);
+        this.layer.putTileAt(1, invaderPos.x, invaderPos.y);
+        this.warriors.forEach((warrior) => {
+          const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
+          if (warriorPos.equals(invaderPos) && warrior) {
+            warrior.handleFlooding();
+          }
+        });
+        if (
+          this.templeTiles.every((tilePos) => {
+            const tile = this.layer.getTileAt(tilePos.x, tilePos.y);
+            return tile.index < WATER_LEVEL;
+          })
+        ) {
+          this.handleLevelFailure();
+        }
+        const newTile = selectNearbyTileToFlood(
+          { x: invaderPos.x, y: invaderPos.y },
+          this.layer
+        );
+        invader.moveTo(this.layer.tileToWorldXY(newTile.x, newTile.y));
+      });
+    }
   }
 
-  spawnSpring(xTile: number, yTile: number) {
+  spawnSpring() {
     if (this.service.state.value.gameplay !== "playing") {
       return;
     }
+
+    const islandTiles = this.layer.filterTiles(
+      (tile: Phaser.Tilemaps.Tile) => tile.index >= WATER_LEVEL
+    );
+    const { x: xTile, y: yTile } = Phaser.Utils.Array.GetRandom(
+      islandTiles
+    ) as Phaser.Tilemaps.Tile;
 
     const threat = new Speech(
       this,
@@ -484,8 +499,10 @@ export default class Game extends Phaser.Scene {
     this.add.existing(spring);
     const floodTile = (xAt: number, yAt: number) => {
       const tile = this.layer.getTileAt(xAt, yAt);
-      const floodIndex = tile.index >= 1 ? 1 : 0;
-      this.layer.putTileAt(floodIndex, xAt, yAt);
+      if (tile) {
+        const floodIndex = tile.index >= 1 ? 1 : 0;
+        this.layer.putTileAt(floodIndex, xAt, yAt);
+      }
     };
     this.time.addEvent({
       delay: 1200,

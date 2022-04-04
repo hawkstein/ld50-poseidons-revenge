@@ -40,7 +40,8 @@ const selectFloodTarget = (
       return { targetX: x, targetY: y };
     }
   }
-  return { targetX: 0, targetY: 0 };
+  console.log({ start, initialSwimDirection });
+  return null;
 };
 
 const selectNearbyTileToFlood = (
@@ -63,7 +64,7 @@ const selectNearbyTileToFlood = (
       continue;
     }
 
-    if (tile.index <= 0) {
+    if (tile.index < WATER_LEVEL) {
       continue;
     }
 

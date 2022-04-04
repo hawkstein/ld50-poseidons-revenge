@@ -25,7 +25,7 @@ const store: GameData = {
     [PRAYER_RATE_KEY, 4000],
     [BASE_SPAWN_RATE_KEY, 1800],
     [TUTORIAL_MODE_KEY, true],
-    [WARRIOR_RANGE_KEY, 140],
+    [WARRIOR_RANGE_KEY, 80],
     [INVADER_SPEED_KEY, 1],
   ]),
   currentLevel: 1,
