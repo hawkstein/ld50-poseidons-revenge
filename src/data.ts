@@ -14,13 +14,14 @@ const SFX_KEY = "sfx";
 const BG_MUSIC_KEY = "bgMusic";
 const WARRIOR_RANGE_KEY = "warriorRange";
 const INVADER_SPEED_KEY = "invaderSpeed";
+const TUTORIAL_MODE_KEY = "tutorialMode";
 
 const store: GameData = {
   keys: new Map(),
   options: new Map<string, boolean | number | string>([
-    ["prayerRate", 5000],
+    ["prayerRate", 2000],
     [BASE_SPAWN_RATE_KEY, 2200],
-    ["tutorialMode", false],
+    [TUTORIAL_MODE_KEY, true],
     [WARRIOR_RANGE_KEY, 140],
     [INVADER_SPEED_KEY, 1],
   ]),
@@ -88,4 +89,5 @@ export {
   BG_MUSIC_KEY,
   WARRIOR_RANGE_KEY,
   INVADER_SPEED_KEY,
+  TUTORIAL_MODE_KEY,
 };

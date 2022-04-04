@@ -22,10 +22,10 @@ export class Temple extends Phaser.GameObjects.Sprite {
 
   private onProgress() {
     this.progressPercentage += 5;
-    console.log(
-      "Temple blessings upon us all! Progress: ",
-      this.progressPercentage
-    );
+    // console.log(
+    //   "Temple blessings upon us all! Progress: ",
+    //   this.progressPercentage
+    // );
     this.setFrame(Math.min(Math.floor(this.progressPercentage / 10), 9));
     if (this.progressPercentage >= 100) {
       this.updateEvent?.destroy();

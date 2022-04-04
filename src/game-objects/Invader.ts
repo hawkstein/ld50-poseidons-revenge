@@ -1,4 +1,5 @@
-import { getOption, INVADER_SPEED_KEY } from "data";
+import getLevelConfig from "@utils/getLevelConfig";
+import { getCurrentLevel, getOption, INVADER_SPEED_KEY } from "data";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
 import buildConfig from "./invaderMachineConfig";
@@ -8,7 +9,9 @@ export const INVADER_FLOOD = "INVADER_FLOOD";
 export class Invader extends Phaser.GameObjects.Sprite {
   private service: any;
   private moveToTarget?: Phaser.Math.Vector2;
-  private speed: number = getOption(INVADER_SPEED_KEY) as number;
+  private speed: number =
+    (getOption(INVADER_SPEED_KEY) as number) +
+    getLevelConfig(getCurrentLevel()).invaderSpeed;
 
   public health: number = 3;
 

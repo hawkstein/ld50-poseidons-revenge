@@ -14,12 +14,15 @@ import {
   getCurrentLevel,
   getOption,
   setCurrentLevel,
+  setOption,
+  TUTORIAL_MODE_KEY,
   WARRIOR_RANGE_KEY,
 } from "data";
 import { Speech } from "game-objects/Speech";
 import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
 import getThreat from "@utils/getThreat";
+import getLevelConfig from "@utils/getLevelConfig";
 
 type InvaderSpawnZone = {
   x: number;
@@ -194,10 +197,11 @@ export default class Game extends Phaser.Scene {
       const cam = this.cameras.main;
       cam.fade(1000, 24, 56, 153);
       const level = getCurrentLevel();
-      if (level >= 3) {
+      if (level >= 5) {
         cam.once("camerafadeoutcomplete", () => this.scene.start(Scenes.END));
       } else {
         setCurrentLevel(level + 1);
+        setOption(TUTORIAL_MODE_KEY, false);
         cam.once("camerafadeoutcomplete", () =>
           this.scene.start(Scenes.LEVEL_COMPLETE)
         );
@@ -269,12 +273,15 @@ export default class Game extends Phaser.Scene {
       }
     );
 
+    const { invaderSpawnRateAdjust, springSpawnRate } = getLevelConfig(
+      getCurrentLevel()
+    );
     this.time.addEvent({
       delay: this.tutorialMode ? 20000 : 0,
       callback: () => {
         // TODO: spawnSpring should search for land tiles
         this.time.addEvent({
-          delay: 20000,
+          delay: 20000 - springSpawnRate,
           loop: true,
           callback: () => {
             this.spawnSpring(
@@ -286,7 +293,7 @@ export default class Game extends Phaser.Scene {
         this.temple.startPraying();
         const invaderSpawnRate = getOption("invaderSpawnRate") as number;
         this.time.addEvent({
-          delay: invaderSpawnRate,
+          delay: invaderSpawnRate - invaderSpawnRateAdjust,
           loop: true,
           callback: () => {
             this.spawnInvader();

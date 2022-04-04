@@ -21,7 +21,7 @@ export default class LevelComplete extends Phaser.Scene {
 
     const cam = this.cameras.main;
     cam.fadeIn(1200, 24, 56, 153, () => {
-      this.time.delayedCall(2000, () =>
+      this.time.delayedCall(2500, () =>
         cam.fade(800, 24, 56, 153, true, () => this.scene.start(Scenes.GAME))
       );
     });

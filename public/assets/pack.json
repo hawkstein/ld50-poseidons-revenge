@@ -78,6 +78,16 @@
         "url": "assets/Level_03.png"
       },
       {
+        "type": "image",
+        "key": "level_4",
+        "url": "assets/Level_04.png"
+      },
+      {
+        "type": "image",
+        "key": "level_5",
+        "url": "assets/Level_05.png"
+      },
+      {
         "type": "audio",
         "key": "drums_loop",
         "url": "assets/DrumsV2.mp3"
