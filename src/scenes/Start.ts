@@ -24,21 +24,21 @@ export default class Start extends Phaser.Scene {
       this.cameras.main.centerY - 170,
       "title_v1"
     );
-
+    const FONT_SIZE = "24px";
     const headline = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY + 50,
+      this.cameras.main.centerY + 10,
       "Built for Ludum Dare Fifty",
-      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
+      { color: "#fff", fontSize: FONT_SIZE, fontFamily: "KenneyMiniSquare" }
     );
     headline.x -= headline.width / 2;
     headline.y -= headline.height / 2;
 
     const subtitle = this.add.text(
       this.cameras.main.centerX,
-      this.cameras.main.centerY + 110,
+      this.cameras.main.centerY + 40,
       "Theme: Delay the inevitable",
-      { color: "#fff", fontSize: "36px", fontFamily: "KenneyMiniSquare" }
+      { color: "#fff", fontSize: FONT_SIZE, fontFamily: "KenneyMiniSquare" }
     );
     subtitle.x -= subtitle.width / 2;
     subtitle.y -= subtitle.height / 2;
@@ -46,7 +46,7 @@ export default class Start extends Phaser.Scene {
     const menu = new StartMenu(
       this,
       this.cameras.main.centerX,
-      this.cameras.main.centerY + 180
+      this.cameras.main.centerY + 100
     );
     menu.build();
   }

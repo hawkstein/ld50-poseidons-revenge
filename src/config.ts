@@ -1,3 +1,4 @@
+import { GAME_HEIGHT, GAME_WIDTH } from "constants";
 import Phaser from "phaser";
 
 export default {
@@ -5,10 +6,11 @@ export default {
   parent: "game",
   backgroundColor: "#263658",
   scale: {
-    width: 960,
-    height: 768,
-    mode: Phaser.Scale.FIT,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
+    mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    zoom: 2,
   },
   pixelArt: true,
 };

@@ -23,7 +23,12 @@ import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
 import getThreat from "@utils/getThreat";
 import getLevelConfig from "@utils/getLevelConfig";
-import { TILE_SIDE, WATER_LEVEL } from "constants";
+import {
+  GAME_HEIGHT_TILES,
+  GAME_WIDTH_TILES,
+  TILE_SIDE,
+  WATER_LEVEL,
+} from "constants";
 import { Water } from "game-objects/Water";
 
 type InvaderSpawnZone = {
@@ -160,8 +165,8 @@ export default class Game extends Phaser.Scene {
       data: levelData as number[][],
       tileWidth: TILE_SIDE,
       tileHeight: TILE_SIDE,
-      width: 32,
-      height: 24,
+      width: GAME_WIDTH_TILES,
+      height: GAME_HEIGHT_TILES,
     });
     const tiles = map.addTilesetImage(
       "tileset",

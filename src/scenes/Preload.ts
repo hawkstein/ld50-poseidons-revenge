@@ -8,20 +8,22 @@ export default class Preload extends Phaser.Scene {
   }
 
   init() {
-    // document.fonts.onloadingdone = (ev) => {
-    //   console.log(ev);
-    // };
     loadGameData();
   }
 
   preload() {
     // Create text with font families that you have preloaded in index.html to ensure Phaser will render them
-    this.add.text(0, 0, "Loading...", {
-      color: "#000",
-      fontSize: "48px",
-      fontFamily: "KenneyMiniSquare",
-    });
-    // this.add.text(40, 40, "Loading...", { color: "#fff", fontSize: "48px" });
+    const message = this.add.text(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY,
+      "Loading...",
+      {
+        color: "#fff",
+        fontSize: "48px",
+        fontFamily: "KenneyMiniSquare",
+      }
+    );
+    message.setOrigin(0.5, 0.8);
     this.load.pack({ key: "preload", url: "assets/pack.json" });
   }
 
