@@ -23,7 +23,8 @@ import checkNeighbours from "game-objects/checkNeighbours";
 import buildLevelFromImage from "@utils/levelFromImage";
 import getThreat from "@utils/getThreat";
 import getLevelConfig from "@utils/getLevelConfig";
-import { WATER_LEVEL } from "constants";
+import { TILE_SIDE, WATER_LEVEL } from "constants";
+import { Water } from "game-objects/Water";
 
 type InvaderSpawnZone = {
   x: number;
@@ -142,6 +143,11 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    for (let index = 0; index < 60; index++) {
+      const element = new Water(this);
+      this.add.existing(element);
+    }
+
     this.warriors = [];
     const level = getCurrentLevel();
     const {
@@ -150,7 +156,6 @@ export default class Game extends Phaser.Scene {
       temple: templePos,
     } = buildLevelFromImage(this.textures, `level_${level}`);
 
-    const TILE_SIDE = 32;
     const map = this.make.tilemap({
       data: levelData as number[][],
       tileWidth: TILE_SIDE,
@@ -514,6 +519,7 @@ export default class Game extends Phaser.Scene {
   }
 
   handleLevelFailure() {
+    setCurrentLevel(1);
     this.service.send({ type: "FAIL" });
     const cam = this.cameras.main;
     cam.fade(1400, 0, 0, 0);

@@ -54,6 +54,17 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "water_anim",
+        "url": "assets/WaterAnim.png",
+        "frameConfig": {
+          "frameWidth": 13,
+          "frameHeight": 9,
+          "startFrame": 0,
+          "endFrame": 4
+        }
+      },
+      {
         "type": "image",
         "key": "poseidon",
         "url": "assets/Poseidon.png"
