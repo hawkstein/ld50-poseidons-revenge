@@ -13,7 +13,7 @@ export class Invader extends Phaser.GameObjects.Sprite {
     (getOption(INVADER_SPEED_KEY) as number) +
     getLevelConfig(getCurrentLevel()).invaderSpeed;
 
-  public health: number = 3;
+  public health: number = 1;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "invader");
