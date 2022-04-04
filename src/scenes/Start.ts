@@ -19,11 +19,13 @@ export default class Start extends Phaser.Scene {
     );
     this.tridents.scale = 2;
 
-    this.add.image(
+    const title = this.add.image(
       this.cameras.main.centerX,
-      this.cameras.main.centerY - 170,
+      this.cameras.main.centerY - 130,
       "title_v1"
     );
+    title.scale = 2;
+
     const FONT_SIZE = "24px";
     const headline = this.add.text(
       this.cameras.main.centerX,

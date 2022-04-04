@@ -26,6 +26,7 @@ import getLevelConfig from "@utils/getLevelConfig";
 import {
   GAME_HEIGHT_TILES,
   GAME_WIDTH_TILES,
+  TILE_HEIGHT,
   TILE_SIDE,
   WATER_LEVEL,
 } from "constants";
@@ -218,8 +219,9 @@ export default class Game extends Phaser.Scene {
         );
       }
     });
-
-    const poseidon = new Poseidon(this, 480, 120);
+    const halfwayAcross = Math.floor(GAME_WIDTH_TILES / 2) * 32;
+    const aLittleDown = TILE_HEIGHT * 3;
+    const poseidon = new Poseidon(this, halfwayAcross, aLittleDown);
     this.add.existing(poseidon);
     poseidon.intro();
 
@@ -324,11 +326,11 @@ export default class Game extends Phaser.Scene {
         3200
       );
       this.add.existing(warriorClick);
-      const secondWarrior = this.warriors[1];
+
       const warriorMove = new Speech(
         this,
-        secondWarrior.x - 216,
-        secondWarrior.y - 36,
+        firstWarrior.x - 216,
+        firstWarrior.y - 36,
         "Click elsewhere to move them",
         9200,
         3200
