@@ -1,4 +1,4 @@
-import { HALF_SIDE, TILE_SIDE } from "constants";
+import { HALF_SIDE } from "constants";
 import { getOption, WARRIOR_RANGE_KEY } from "data";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
