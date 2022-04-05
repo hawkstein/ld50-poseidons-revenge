@@ -1,4 +1,4 @@
-import { HALF_SIDE } from "constants";
+import { HALF_SIDE, TILE_SIDE } from "constants";
 import { getOption, WARRIOR_RANGE_KEY } from "data";
 import Phaser from "phaser";
 import { createMachine, interpret } from "xstate";
@@ -114,12 +114,14 @@ export class Warrior extends Phaser.GameObjects.Sprite {
   }
 
   moveAlong(path: Phaser.Math.Vector2[]) {
-    // console.log(
+    // console.table(
     //   [...path].map((vector) => ({
-    //     x: Math.abs(vector.x / 32),
-    //     y: Math.abs(vector.y / 32),
+    //     x: Math.floor(vector.x / TILE_SIDE),
+    //     y: Math.floor(vector.y / TILE_SIDE),
     //   }))
     // );
+    //console.log([...path])
+
     if (!path || path.length <= 0) {
       return;
     }

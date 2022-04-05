@@ -1,4 +1,4 @@
-import { WATER_LEVEL } from "constants";
+import { TILE_SIDE, WATER_LEVEL } from "constants";
 import Phaser from "phaser";
 
 type TilePosition = {
@@ -14,7 +14,7 @@ const findPath = (
   tileMapLayer: Phaser.Tilemaps.TilemapLayer,
   bannedTiles: Phaser.Math.Vector2[] = []
 ) => {
-  if (tileMapLayer.getTileAt(target.x, target.y).index <= 0) {
+  if (tileMapLayer.getTileAt(target.x, target.y).index < WATER_LEVEL) {
     return [];
   }
 
@@ -29,6 +29,9 @@ const findPath = (
 
   const startKey = toKey(start.x, start.y);
   const targetKey = toKey(target.x, target.y);
+
+  // console.log(targetKey);
+  // console.log(startKey);
 
   parentForKey[startKey] = {
     key: "",
@@ -103,10 +106,17 @@ const findPath = (
     currentPos = position;
   }
 
-  // const finalPos = new Phaser.Math.Vector2(target.x, target.y);
-  // path.push(finalPos);
-
-  return path.reverse();
+  const finalPos = new Phaser.Math.Vector2(
+    target.x * TILE_SIDE,
+    target.y * TILE_SIDE
+  );
+  //path;
+  //console.log(finalPos);
+  const reversed = path.reverse();
+  reversed.pop();
+  reversed.push(finalPos);
+  //console.log([...reversed]);
+  return reversed;
 };
 
 export default findPath;

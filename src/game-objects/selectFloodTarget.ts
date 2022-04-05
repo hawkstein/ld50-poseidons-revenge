@@ -40,7 +40,7 @@ const selectFloodTarget = (
       return { targetX: x, targetY: y };
     }
   }
-  console.log({ start, initialSwimDirection });
+  // console.log({ start, initialSwimDirection });
   return null;
 };
 

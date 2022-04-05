@@ -262,7 +262,6 @@ export default class Game extends Phaser.Scene {
         }
       );
       warrior.on(LEAP_TO_SAFETY, () => {
-        console.log(warrior);
         const warriorPos = this.layer.worldToTileXY(warrior.x, warrior.y);
         const safety = checkNeighbours(warriorPos, WATER_LEVEL, this.layer);
         if (warriorPos.equals(safety)) {
@@ -277,16 +276,22 @@ export default class Game extends Phaser.Scene {
       Phaser.Input.Events.POINTER_UP,
       (pointer: Phaser.Input.Pointer) => {
         if (this.selectedWarrior) {
+          //console.group("Path Find")
           const { worldX, worldY } = pointer;
-          const targetVec = this.layer.worldToTileXY(worldX, worldY);
+          const targetTile = this.layer.worldToTileXY(worldX, worldY);
+          //console.log(`target - tileX: ${targetTile.x} tileY: ${targetTile.y}`)
           const warriorPos = this.layer.worldToTileXY(
             this.selectedWarrior.x,
             this.selectedWarrior.y
           );
-          // TODO: fix this path finding
-          this.selectedWarrior?.moveAlong(
-            findPath(warriorPos, targetVec, this.layer, this.templeTiles)
-          );
+          //console.log(`current - tileX: ${warriorPos.x} tileY: ${warriorPos.y}`);
+          if (!targetTile.equals(warriorPos)) {
+            this.selectedWarrior.moveAlong(
+              findPath(warriorPos, targetTile, this.layer, this.templeTiles)
+            );
+          }
+
+          //console.groupEnd()
         }
       }
     );
