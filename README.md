@@ -25,6 +25,8 @@ Built over 48hrs from 2nd to 4th April 2020 by @liam (LD) AKA: @hawkstein (GitHu
 ## Useful Resources
 
 - [80's Fonts 🤘](https://hyperpix.net/fonts/80s-fonts/)
+- [Pixelart - Water in Motion](https://www.slynyrd.com/blog/2018/10/12/pixelblog-10-water-in-motion)
+- [Water splash example](https://dreamypixelart.itch.io/pixel-art-effect-water-ice)
 
 ### Credits
 
